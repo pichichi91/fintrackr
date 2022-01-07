@@ -6,8 +6,35 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  @apply bg-slate-50;
+  font-family: Montserrat, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+}
+
+.super-title {
+
+  font-family: 'Kanit', sans-serif;
+    @apply font-bold text-5xl  text-indigo-800 ;
+
+}
+
+.styled-input {
+  @apply  rounded border-0 bg-gray-200;
+
+}
+
+
+button {
+  @apply font-bold uppercase py-2 px-4 text-sm rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150;
+}
+
+
+button.primary {
+  @apply bg-indigo-600  hover:bg-indigo-800 text-white;
+}
+button.danger {
+  @apply  text-red-500 hover:bg-red-100 ;
 }
 
 a {
@@ -18,3 +45,16 @@ a {
 * {
   box-sizing: border-box;
 }
+
+thead tr {
+  border-bottom: 1px solid #4f46e5;
+  @apply uppercase font-bold ;
+}
+
+tbody tr {
+ border-top: 1px solid rgba(230, 228, 228, 0.454);
+  
+ border-left: 0;
+ border-right: 0;
+}
+
