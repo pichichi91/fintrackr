@@ -2,7 +2,7 @@ type BadgeProps = {
   text: string;
   className: string;
 };
-export const UiBadge: React.FC<BadgeProps> = ({ text, className }) => {
+const UiBadge: React.FC<BadgeProps> = ({ text, className }) => {
   if (!text) return <></>;
 
   return (
@@ -22,3 +22,5 @@ export const UiBadge: React.FC<BadgeProps> = ({ text, className }) => {
     </>
   );
 };
+
+export default UiBadge;
