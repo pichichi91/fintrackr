@@ -70,7 +70,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     const parsedCategory = category === 0 ? null : category
 
-    const expenses = Array.from(Array(days).keys()).map((day) => ({
+    const expenses = Array.from(Array(days).keys())?.map((day) => ({
       date: startDate?.add(day, "days")?.toDate()!,
       amount: splittedAmount,
       currency,
@@ -140,7 +140,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     value={newData?.amount}
                     className="styled-input"
                   >
-                    {currencies.map((currency) => (
+                    {currencies?.map((currency) => (
                       <option key={currency} value={currency}>
                         {currency}
                       </option>
@@ -165,7 +165,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   >
                     <option value={0}>Select a category</option>
 
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                       <option className="capitalize " key={category.id} value={category.id}>
                         {category.name}
                       </option>
