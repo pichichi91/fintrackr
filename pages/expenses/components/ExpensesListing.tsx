@@ -36,7 +36,7 @@ const TableListing: React.FC<TableListingProps> = ({
       </tr>
     </thead>
     <tbody className="text-sm sm:text-base">
-      {expenses.map((expense) => (
+      {expenses?.map((expense) => (
         <tr key={Math.random()}>
           {type === "DEFAULT" && (
             <td className="px-6 py-4 whitespace-nowrap ">
