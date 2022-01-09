@@ -17,6 +17,7 @@ type ExpenseProps = {
   currency: string;
   days: number;
   category: number ;
+  notes: string;
 };
 
 type AddExpenseModalProps = {
@@ -32,6 +33,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   isOpen,
   setOpen,
   categories,
+  reload,
 }) => {
   const [newData, setNewData] = useState<ExpenseProps>({
     date: dayjs().utc(),
@@ -39,6 +41,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     currency: "MXN",
     days: 1,
     category: 0,
+    notes: '',
   });
 
   const changeAmount = (e: ChangeEvent<HTMLInputElement>) => {
@@ -60,8 +63,13 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     setNewData({ ...newData, date: newDate.utc()! });
   };
 
-  const handleSubmit = () => {
-    const { date, amount, currency, days, category } = newData;
+  const changeNotes = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const notes = e.target.value;
+    setNewData({ ...newData, notes });
+  }
+
+  const handleSubmit = async () => {
+    const { date, amount, currency, days, category, notes } = newData;
 
     const splittedAmount = amount / days;
 
@@ -74,11 +82,13 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       date: startDate?.add(day, "days")?.toDate()!,
       amount: splittedAmount,
       currency,
-     category: parsedCategory
+     category: parsedCategory, notes
     }));
 
-    addExpense(expenses);
-    queryExpenses();
+    const { error } =  await addExpense(expenses);
+
+    if(!error) setOpen(false)
+    reload();
   };
 
   const queryExpenses = async () => {
@@ -110,19 +120,13 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            <div className="flex w-96 items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+            
+            <div className="flex mx-2 items-start justify-between pl-2 p-5 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="text-2xl font-semibold">Add new expense</h3>
-              <button
-                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setOpen(false)}
-              >
-                <span className="bg-transparent  opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                  ×
-                </span>
-              </button>
+
             </div>
-            <div className="relative p-6 flex-auto">
-              <div className="mx-2 grid grid-cols-1 gap-6">
+            <div className="relative p-6 flex-auto flex ">
+              <div className="mx-2  w grid grid-cols-1 gap-6">
                 <label className="flex flex-col">
                   <span>Date</span>
                   <input
@@ -187,6 +191,13 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                       {newData.currency}
                     </p>
                   </div>
+                </label>
+              </div>
+              <div className="ml-8">
+              <label className="flex flex-col">
+              <span>Notes</span>
+
+                <textarea value={newData.notes}  onChange={changeNotes} rows={12} cols={25}  className=" h-20 styled-input flex-1 " />
                 </label>
               </div>
             </div>

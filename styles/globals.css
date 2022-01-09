@@ -12,6 +12,10 @@ body {
 
 }
 
+textarea {
+  resize: none;
+}
+
 .super-title {
 
   font-family: 'Kanit', sans-serif;

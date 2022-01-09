@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
 import ExpensesArea from "../components/graphs/ExpensesArea";
-import UiBadge  from "../components/ui-badge/ui-badge";
+import UiBadge from "../components/ui-badge/ui-badge";
 import AddExpenseModal from "./addModal";
 import { Converter } from "easy-currencies";
 
@@ -12,6 +12,7 @@ import {
   AllExpenseCategoriesProps,
   getExpenseCategories,
 } from "../../api/expense-categories/get-categories";
+import TableListing from "./components/ExpensesListing";
 
 const currencies = ["MXN", "CHF", "USD", "EUR"];
 
@@ -158,12 +159,12 @@ const Expenses: React.FC<ExpensesProps> = ({
         if (expenseDate) return expense;
       });
 
-      if (expensesUntilToday.length === 0){
+      if (expensesUntilToday.length === 0) {
         setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0 });
         return;
       }
 
-      const days =  expensesUntilToday.reduce((acc: DaysType, { date }) => {
+      const days = expensesUntilToday.reduce((acc: DaysType, { date }) => {
         acc[date] = acc[date] === undefined ? 1 : (acc[date] += 1);
         return acc;
       }, {});
@@ -191,11 +192,13 @@ const Expenses: React.FC<ExpensesProps> = ({
         <div className="flex items-center">
           <h1 className="font-bold text-2xl">Expenses 2022</h1>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row md:justify-start justify-between">
           <div className="flex mt-4 md:mt-0 ">
             <label className="flex flex-row ">
               <div className="flex flex-row items-center ">
-                <span className="mr-1 text-md  text-gray-400 ">Month</span>
+                <span className="mr-2 sm:mr-1 text-md  text-gray-400 ">
+                  Month
+                </span>
               </div>
               <select
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
@@ -214,7 +217,9 @@ const Expenses: React.FC<ExpensesProps> = ({
           <div className="flex mt-2 md:mt-0 ml-3 md:ml-4">
             <label className="flex flex-row ">
               <div className="flex flex-row items-center ">
-                <span className="mr-2 text-md text-gray-400 ">Currency</span>
+                <span className="mr-3 sm:mr-2 text-md text-gray-400 ">
+                  Currency
+                </span>
               </div>
               <select
                 onChange={(e) => setSelectedCurrency(e.target.value)}
@@ -277,55 +282,29 @@ const Expenses: React.FC<ExpensesProps> = ({
         </button>
       </div>
 
-      <table className="table-fixed w-full min-w-full ">
-        <thead className="text-md text-left font-bold ">
-          <tr>
-            <td className="px-6 py-1 text-sm sm:text-base  tracking-wider">Date</td>
-            <td className="px-6 py-3 text-sm sm:text-base tracking-wider ">Amount</td>
-            <td className="px-6 py-3 text-sm sm:text-base tracking-wider ">Category</td>
-            <td className="px-6 py-3 text-sm sm:text-base tracking-wider ">Actions</td>
-          </tr>
-        </thead>
-        <tbody className="text-sm sm:text-base">
-          {expenses.map((expense) => (
-            <tr key={Math.random()}>
-              <td className="px-6 py-4 whitespace-nowrap ">
-                {dayjs(expense.date).format("DD MMM")}
-              </td>
-              <td className="px-6 py-4  font-bold">
-                <div className="flex">
-                  <p className="mr-1">
-                    {(
-                      expense.amount *
-                      (currencyFactors ? currencyFactors[expense.currency] : 1)
-                    ).toFixed(0)}
-                  </p>
-                  <p className=" font-thin text-sm text-gray-400 ">
-                    {selectedCurrency}
-                  </p>
-                </div>
-              </td>
-              <td className="px-6 py-4">
+      <div className="my-8 ">
+        <h2 className="font-bold text-xl mb-2">Today&apos;s Expenses</h2>
+        <TableListing
+          currency={selectedCurrency}
+          currencyFactors={currencyFactors}
+          expenses={expenses.filter((expense) =>
+            dayjs(expense.date).startOf('day').isSame(dayjs().startOf('day'))
+          )}
+          type='DAY'
+          deleteAction={deleteExpenseAndReload}
 
-                             <UiBadge
-                  className={`${expense.category?.name === 'Food' ? 'bg-green-400'
-                   : 'bg-indigo-400'  }`} 
-                  text={expense.category?.name}
-                />
-              </td>
-              <td>
-                {" "}
-                <button
-                  onClick={() => deleteExpenseAndReload(expense.id)}
-                  className="text-red-500"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        />
+
+      </div>
+
+      <div className="my-4 mt-12 "></div>
+      <h2 className="font-bold text-xl mb-2">This month&apos; expenses</h2>
+      <TableListing
+        currency={selectedCurrency}
+        currencyFactors={currencyFactors}
+        expenses={expenses}
+        deleteAction={deleteExpenseAndReload}
+      />
       {modalIsOpen && (
         <AddExpenseModal
           categories={queriedCategories}

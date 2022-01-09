@@ -17,6 +17,7 @@ const addExpense = async (values: ExpenseParams[]) => {
       values,
     );
 
+    return {data, error}
 
     console.log({data, error})
 }
