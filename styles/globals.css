@@ -19,7 +19,7 @@ textarea {
 .super-title {
 
   font-family: 'Kanit', sans-serif;
-    @apply font-bold text-5xl  text-indigo-800 ;
+    @apply font-bold text-4xl lg:text-5xl text-indigo-800 ;
 
 }
 

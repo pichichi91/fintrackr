@@ -192,11 +192,11 @@ const Expenses: React.FC<ExpensesProps> = ({
         <div className="flex items-center">
           <h1 className="font-bold text-2xl">Expenses 2022</h1>
         </div>
-        <div className="flex flex-row md:justify-start justify-between">
+        <div className="flex flex-col md:flex-row md:justify-start justify-between">
           <div className="flex mt-4 md:mt-0 ">
             <label className="flex flex-row ">
               <div className="flex flex-row items-center ">
-                <span className="mr-2 sm:mr-1 text-md  text-gray-400 ">
+                <span className="mr-8 sm:mr-1 text-md  text-gray-400 ">
                   Month
                 </span>
               </div>
@@ -214,7 +214,7 @@ const Expenses: React.FC<ExpensesProps> = ({
               </select>
             </label>
           </div>
-          <div className="flex mt-2 md:mt-0 ml-3 md:ml-4">
+          <div className="flex mt-2 md:mt-0 ml-0 md:ml-4">
             <label className="flex flex-row ">
               <div className="flex flex-row items-center ">
                 <span className="mr-3 sm:mr-2 text-md text-gray-400 ">
