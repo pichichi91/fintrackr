@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
-import ExpensesArea from "../components/graphs/ExpensesArea";
-import UiBadge from "../components/ui-badge/ui-badge";
+import ExpensesArea from "../../components/graphs/ExpensesArea";
+import UiBadge from "../../components/ui-badge/ui-badge";
 import AddExpenseModal from "./addModal";
 import { Converter } from "easy-currencies";
 
