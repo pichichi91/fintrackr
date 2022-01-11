@@ -164,23 +164,26 @@ const Expenses: React.FC<ExpensesProps> = ({
         return;
       }
 
-      const days = expensesUntilToday.reduce((acc: DaysType, { date }) => {
-        acc[date] = acc[date] === undefined ? 1 : (acc[date] += 1);
-        return acc;
-      }, {});
-      const dailyAverage = Number(
-        (
-          expensesUntilToday.reduce(
-            (s, v) => s + v.amount * factorObject[v.currency],
-            0
-          ) / Object.keys(days).length
-        ).toFixed(0)
+
+
+
+      const totalUntilNow = expensesUntilToday.reduce(
+        (s, v) => s + v.amount * factorObject[v.currency],
+        0
       );
+
+      const dailyAverage = Number(
+        (totalUntilNow / Number(dayjs().format('D'))).toFixed(0)
+      );
+
+      const daysOfMonth = Number(dayjs().endOf("month").format("D"));
+
+      console.log({ daysOfMonth, totalUntilNow });
 
       setStats({
         monthlyTotal,
         dailyAverage,
-        prognosedTotal: 30 * dailyAverage,
+        prognosedTotal: daysOfMonth * dailyAverage,
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -288,13 +291,11 @@ const Expenses: React.FC<ExpensesProps> = ({
           currency={selectedCurrency}
           currencyFactors={currencyFactors}
           expenses={expenses.filter((expense) =>
-            dayjs(expense.date).startOf('day').isSame(dayjs().startOf('day'))
+            dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
           )}
-          type='DAY'
+          type="DAY"
           deleteAction={deleteExpenseAndReload}
-
         />
-
       </div>
 
       <div className="my-4 mt-12 "></div>
