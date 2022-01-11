@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { AllExpensesProps } from "../../../api/expenses/get-expenses";
-import UiBadge from "../../../components/ui-badge/ui-badge";
+import { AllExpensesProps } from "../../api/expenses/get-expenses";
+import UiBadge from "../ui-badge/ui-badge";
 import {TiDelete} from "react-icons/ti"
 type TableListingProps = {
   expenses: AllExpensesProps[];

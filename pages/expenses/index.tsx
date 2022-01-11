@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
 import ExpensesArea from "../../components/graphs/ExpensesArea";
 import UiBadge from "../../components/ui-badge/ui-badge";
-import AddExpenseModal from "./addModal";
+import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
 import { deleteExpense } from "../../api/expenses/delete-expense";
@@ -12,7 +12,7 @@ import {
   AllExpenseCategoriesProps,
   getExpenseCategories,
 } from "../../api/expense-categories/get-categories";
-import TableListing from "./components/ExpensesListing";
+import TableListing from "../../components/expenses/ExpensesListing";
 
 const currencies = ["MXN", "CHF", "USD", "EUR"];
 
