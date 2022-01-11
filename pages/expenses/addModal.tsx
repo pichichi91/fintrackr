@@ -141,7 +141,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   <span>Currency</span>
                   <select
                     onChange={changeCurrency}
-                    value={newData?.amount}
+                    value={newData?.currency}
                     className="styled-input"
                   >
                     {currencies?.map((currency) => (
