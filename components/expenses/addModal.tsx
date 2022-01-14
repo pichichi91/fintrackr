@@ -16,8 +16,9 @@ type ExpenseProps = {
   amount: number;
   currency: string;
   days: number;
-  category: number ;
+  category: number;
   notes: string;
+  splitBy: "days" | "months";
 };
 
 type AddExpenseModalProps = {
@@ -41,8 +42,14 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     currency: "MXN",
     days: 1,
     category: 0,
-    notes: '',
+    notes: "",
+    splitBy: "days",
   });
+
+  const changeSplit = (e: ChangeEvent<HTMLSelectElement>) => {
+    const splitBy = e.target.value as "days" | "months";
+    setNewData({ ...newData, splitBy });
+  };
 
   const changeAmount = (e: ChangeEvent<HTMLInputElement>) => {
     const newAmount = Number(e.target.value);
@@ -66,7 +73,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   const changeNotes = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const notes = e.target.value;
     setNewData({ ...newData, notes });
-  }
+  };
 
   const handleSubmit = async () => {
     const { date, amount, currency, days, category, notes } = newData;
@@ -75,19 +82,19 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     const startDate = date;
 
-
-    const parsedCategory = category === 0 ? null : category
+    const parsedCategory = category === 0 ? null : category;
 
     const expenses = Array.from(Array(days).keys())?.map((day) => ({
-      date: startDate?.add(day, "days")?.toDate()!,
+      date: startDate?.add(day, newData.splitBy)?.toDate()!,
       amount: splittedAmount,
       currency,
-     category: parsedCategory, notes
+      category: parsedCategory,
+      notes,
     }));
 
-    const { error } =  await addExpense(expenses);
+    const { error } = await addExpense(expenses);
 
-    if(!error) setOpen(false)
+    if (!error) setOpen(false);
     reload();
   };
 
@@ -102,14 +109,12 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   const changeCategory = (e: ChangeEvent<HTMLSelectElement>) => {
-
     const category = Number(e.target.value);
 
-    if(category > 0){
-      setNewData({...newData, category})
+    if (category > 0) {
+      setNewData({ ...newData, category });
     }
-
-  }
+  };
 
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
@@ -120,10 +125,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative top-28 md:top-0 w-auto md:my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-            
             <div className="flex mx-2 items-start justify-between pl-2 p-5 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="text-2xl font-semibold">Add new expense</h3>
-
             </div>
             <div className="relative p-6 flex-auto flex flex-col md:flex-row ">
               <div className="md:mx-2 grid grid-cols-1 gap-6">
@@ -170,35 +173,75 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     <option value={0}>Select a category</option>
 
                     {categories?.map((category) => (
-                      <option className="capitalize " key={category.id} value={category.id}>
+                      <option
+                        className="capitalize "
+                        key={category.id}
+                        value={category.id}
+                      >
                         {category.name}
                       </option>
                     ))}
                   </select>
                 </label>
                 <label className="flex flex-col">
-                  <span>Split to X days</span>
+                  <span>Split By</span>
+                  <select
+                    onChange={changeSplit}
+                    value={newData?.splitBy}
+                    className="styled-input capitalize"
+                  >
+                    {["days", "months"].map((item) => (
+                      <option className="capitalize " key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex flex-col">
+                  <span>Split to X {newData.splitBy}</span>
                   <input
                     onChange={changeDays}
                     value={newData?.days}
                     type="number"
                     className="styled-input"
                   />
-                  <div className="flex mt-1  text-gray-500 text-xs">
-                    <p className="mr-2  font-bold">Amount per day:</p>
-                    <p>
-                      {(newData.amount / newData.days).toFixed(2)}{" "}
-                      {newData.currency}
-                    </p>
-                  </div>
+                  
                 </label>
               </div>
-              <div className="mt-4 md:mt-0 md:ml-8">
-              <label className="flex flex-col">
-              <span>Notes</span>
+              <div className="flex flex-col  md:mt-0 md:ml-8">
+                <div className="">
+                  <label className="flex flex-col">
+                    <span>Notes</span>
 
-                <textarea value={newData.notes}  onChange={changeNotes} rows={10} cols={25}  className=" h-20 styled-input flex-1 " />
-                </label>
+                    <textarea
+                      value={newData.notes}
+                      onChange={changeNotes}
+                      rows={5}
+                      cols={25}
+                      className=" h-20 styled-input flex-1 "
+                    />
+                  </label>
+                </div>
+                <div className="mt-4">
+                      <h4 className=" font-bold text-lg">Summary</h4>
+                      <div>
+                        {Array.from(Array(newData.days).keys())?.map((day) => {
+                          const date = newData.date?.add(day, newData.splitBy).format('DD MMM YYYY')
+                          return <div key={date} className="flex  text-gray-500 text-xs">
+                          <p className="mr-2 w-20 font-bold" >{date}</p>
+
+                          <p className="text-gray-400">
+                            {(newData.amount / newData.days).toFixed(2)}{" "}
+                            {newData.currency}
+                          </p>
+                        </div>
+                          
+                          
+                          
+                        })}
+                        
+                      </div>
+                </div>
               </div>
             </div>
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">

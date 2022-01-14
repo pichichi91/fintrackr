@@ -65,7 +65,7 @@ const TableListing: React.FC<TableListingProps> = ({
               text={expense.category?.name}
             />
           </td>
-          <td>
+          <td className="pl-0 md:pl-4">
             {" "}
             {deleteAction && (
               <button
