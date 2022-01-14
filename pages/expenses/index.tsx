@@ -14,7 +14,9 @@ import {
 } from "../../api/expense-categories/get-categories";
 import TableListing from "../../components/expenses/ExpensesListing";
 
-const currencies = ["MXN", "CHF", "USD", "EUR"];
+
+import currencies from './../../utils/currencies'
+
 
 const months = [
   {
@@ -125,7 +127,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       currencies.map(async (currency) => ({
         source: currency,
         destination: selectedCurrency,
-        factor: await converter.convert(1, currency, selectedCurrency),
+        factor: await converter.convert(1, currency.value, selectedCurrency),
       }))
     ).then((data) => data);
   };
@@ -135,7 +137,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       const factorObject: any = {};
 
       factors.map(({ source, factor }) => {
-        factorObject[source] = factor;
+        factorObject[source.value] = factor;
       });
 
       setCurrencyFactors(factorObject);
@@ -230,8 +232,8 @@ const Expenses: React.FC<ExpensesProps> = ({
                 className="styled-input mr-1"
               >
                 {currencies.map((currency) => (
-                  <option key={currency} value={currency}>
-                    {currency}
+                  <option key={currency.value} value={currency.value}>
+                    {currency.label}
                   </option>
                 ))}
               </select>

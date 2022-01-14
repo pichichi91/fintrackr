@@ -1,8 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { addExpense } from "../../api/expenses/add-expense";
 import { getExpenses } from "../../api/expenses/get-expenses";
-import Modal from "react-modal";
 
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -11,6 +10,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("America/New_York");
 
+import currencies from './../../utils/currencies'
 type ExpenseProps = {
   date?: Dayjs;
   amount: number;
@@ -28,7 +28,6 @@ type AddExpenseModalProps = {
   categories: AllExpenseCategoriesProps[];
 };
 
-const currencies = ['MXN', 'CHF', 'USD', 'EUR'];
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   isOpen,
@@ -148,8 +147,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     className="styled-input"
                   >
                     {currencies?.map((currency) => (
-                      <option key={currency} value={currency}>
-                        {currency}
+                      <option key={currency.value} value={currency.value}>
+                        {currency.label}
                       </option>
                     ))}
                   </select>
@@ -232,7 +231,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
                           <p className="text-gray-400">
                             {(newData.amount / newData.days).toFixed(2)}{" "}
-                            {newData.currency}
+                            {currencies.find(currency => currency.value === newData.currency)?.label}
                           </p>
                         </div>
                           
