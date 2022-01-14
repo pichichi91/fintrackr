@@ -28,7 +28,7 @@ type AddExpenseModalProps = {
   categories: AllExpenseCategoriesProps[];
 };
 
-const currencies = ["MXN", "CHF", "USD", "EUR"];
+const currencies = ['MXN', 'CHF', 'USD', 'EUR'];
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   isOpen,
