@@ -118,15 +118,15 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   return (
     <>
       <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+        <div className="relative top-28 md:top-0 w-auto md:my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             
             <div className="flex mx-2 items-start justify-between pl-2 p-5 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="text-2xl font-semibold">Add new expense</h3>
 
             </div>
-            <div className="relative p-6 flex-auto flex ">
-              <div className="mx-2  w grid grid-cols-1 gap-6">
+            <div className="relative p-6 flex-auto flex flex-col md:flex-row ">
+              <div className="md:mx-2 grid grid-cols-1 gap-6">
                 <label className="flex flex-col">
                   <span>Date</span>
                   <input
@@ -193,11 +193,11 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   </div>
                 </label>
               </div>
-              <div className="ml-8">
+              <div className="mt-4 md:mt-0 md:ml-8">
               <label className="flex flex-col">
               <span>Notes</span>
 
-                <textarea value={newData.notes}  onChange={changeNotes} rows={12} cols={25}  className=" h-20 styled-input flex-1 " />
+                <textarea value={newData.notes}  onChange={changeNotes} rows={10} cols={25}  className=" h-20 styled-input flex-1 " />
                 </label>
               </div>
             </div>
