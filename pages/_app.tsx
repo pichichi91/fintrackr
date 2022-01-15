@@ -31,8 +31,15 @@ function MyApp({ Component, pageProps }: AppProps) {
             </Layout>
           </SignedIn>
           <SignedOut>
-            
-           
+            <main>
+              <p>
+                Please{" "}
+                <Link href="/sign-in">
+                  <a className=" font-bold text-indigo-700">sign in</a>
+                </Link>{" "}
+                to access this page.
+              </p>
+            </main>
           </SignedOut>
         </>
       )}
