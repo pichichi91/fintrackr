@@ -1,9 +1,16 @@
-import '../styles/globals.css';
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs';
-import { useRouter } from 'next/router';
-import { AppProps } from 'next/dist/shared/lib/router/router';
+import "../styles/globals.css";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+} from "@clerk/nextjs";
+import { useRouter } from "next/router";
+import { AppProps } from "next/dist/shared/lib/router/router";
+import Link from "next/link";
+import Layout from "../components/ui-layout/Layout";
 
-const publicPages: string[] = [];
+const publicPages: string[] = [ '/sign-in/[[...index]]', '/sign-up/[[...index]]']
 
 function MyApp({ Component, pageProps }: AppProps) {
   // Get the pathname
@@ -18,14 +25,18 @@ function MyApp({ Component, pageProps }: AppProps) {
       ) : (
         <>
           <SignedIn>
+          <Layout>
+
             <Component {...pageProps} />
+            </Layout>
           </SignedIn>
           <SignedOut>
-            <RedirectToSignIn  />
+            
+           
           </SignedOut>
         </>
       )}
     </ClerkProvider>
   );
 }
-export default MyApp
+export default MyApp;

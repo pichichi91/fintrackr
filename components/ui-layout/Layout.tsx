@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 import {RiCommandFill} from 'react-icons/ri'
+import {FaUserAstronaut} from 'react-icons/fa'
+import { SignedIn, UserButton } from "@clerk/nextjs";
+
 type LayoutProps = {
   children: ReactNode;
 };
@@ -23,9 +26,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
           <Link href="/revenue">
             <a className="hover:text-indigo-800 flex  items-center ">Revenue</a>
           </Link>
-          <button onClick={showCommandPalette} className="m-0 ml-4  mr-1 bg-slate-100 p-2 shadow-md">
-            <RiCommandFill className="fill-indigo-700 " size={30} />
-          </button>
+
+          <SignedIn>
+        <div className="ml-4 mt-2 mr-1">
+          <UserButton userProfileURL="/user" afterSignOutAll="/" />
+        </div>
+      </SignedIn>
+          
         </div>
       </div>
 
