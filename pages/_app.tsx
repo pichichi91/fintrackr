@@ -1,9 +1,8 @@
-import "../styles/globals.css";
+import "../styles/globals.scss";
 import {
   ClerkProvider,
   SignedIn,
   SignedOut,
-  RedirectToSignIn,
 } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import { AppProps } from "next/dist/shared/lib/router/router";
