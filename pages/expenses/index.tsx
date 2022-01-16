@@ -16,6 +16,7 @@ import TableListing from "../../components/expenses/ExpensesListing";
 
 
 import currencies from './../../utils/currencies'
+import { useUser } from "@clerk/nextjs";
 
 
 const months = [
@@ -69,16 +70,15 @@ const months = [
   },
 ];
 
-type DaysType = Record<string, number>;
-
 type ExpensesProps = {
-  queriedExpenses: AllExpensesProps[];
   queriedCategories: AllExpenseCategoriesProps[];
 };
+
 const Expenses: React.FC<ExpensesProps> = ({
-  queriedExpenses,
   queriedCategories,
 }) => {
+  const user =  useUser();
+  const queriedExpenses: AllExpensesProps[] = [];
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const [selectedMonth, setSelectedMonth] = useState(1);
@@ -93,6 +93,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   });
 
   const reloadExpenses = async () => {
+
     const startDate = dayjs()
       .add(selectedMonth - 1, "month")
       .startOf("month")
@@ -102,11 +103,13 @@ const Expenses: React.FC<ExpensesProps> = ({
       .endOf("month")
       .format("YYYY-MM-DD");
 
-    const filters = { startDate, endDate };
+      const {id: userId} = user;
+
+    const filters = { startDate, endDate, userId };
 
     const { data: queriedExpenses } = await getExpenses(filters);
 
-    setExpenses(queriedExpenses!);
+    setExpenses(queriedExpenses || []);
   };
 
   const deleteExpenseAndReload = (id: string) => {
@@ -143,8 +146,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       setCurrencyFactors(factorObject);
 
       const monthlyTotal = Number(
-        expenses
-          .reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
+        expenses?.reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
           .toFixed(0)
       );
 
@@ -153,7 +155,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         return;
       }
 
-      const expensesUntilToday = expenses.filter((expense) => {
+      const expensesUntilToday = expenses?.filter((expense) => {
         const expenseDate = dayjs(expense.date)
           .startOf("day")
           .isBefore(dayjs().add(1, "day").startOf("day"));
@@ -161,7 +163,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         if (expenseDate) return expense;
       });
 
-      if (expensesUntilToday.length === 0) {
+      if (expensesUntilToday?.length === 0) {
         setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0 });
         return;
       }
@@ -169,7 +171,7 @@ const Expenses: React.FC<ExpensesProps> = ({
 
 
 
-      const totalUntilNow = expensesUntilToday.reduce(
+      const totalUntilNow = expensesUntilToday?.reduce(
         (s, v) => s + v.amount * factorObject[v.currency],
         0
       );
@@ -179,8 +181,6 @@ const Expenses: React.FC<ExpensesProps> = ({
       );
 
       const daysOfMonth = Number(dayjs().endOf("month").format("D"));
-
-      console.log({ daysOfMonth, totalUntilNow });
 
       setStats({
         monthlyTotal,
@@ -292,7 +292,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         <TableListing
           currency={selectedCurrency}
           currencyFactors={currencyFactors}
-          expenses={expenses.filter((expense) =>
+          expenses={expenses?.filter((expense) =>
             dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
           )}
           type="DAY"
@@ -314,6 +314,7 @@ const Expenses: React.FC<ExpensesProps> = ({
           reload={reloadExpenses}
           isOpen={modalIsOpen}
           setOpen={setIsOpen}
+          user={user.id}
         />
       )}
     </>
@@ -321,13 +322,10 @@ const Expenses: React.FC<ExpensesProps> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const startDate = dayjs().startOf("month").format("YYYY-MM-DD");
-  const endDate = dayjs().endOf("month").format("YYYY-MM-DD");
-  const { data: queriedExpenses } = await getExpenses({ startDate, endDate });
-  const { data: queriedCategories } = await getExpenseCategories();
+const { data: queriedCategories } = await getExpenseCategories();
 
   return {
-    props: { queriedExpenses, queriedCategories }, // will be passed to the page component as props
+    props: {queriedCategories }, // will be passed to the page component as props
   };
 };
 export default Expenses;

@@ -12,6 +12,8 @@ export type AllExpensesProps = {
 type AllExpensesParams = {
   startDate?: string;
   endDate?: string;
+  userId: string;
+
 };
 
 const getExpenses = async (filters: AllExpensesParams) => {
@@ -25,8 +27,8 @@ const getExpenses = async (filters: AllExpensesParams) => {
     .order("date")
     .gte('date', startDate)
     .lte('date', endDate)
-
-  console.log({ data, error });
+    .eq('user_id', filters.userId
+    )
   return { data, error };
 };
 
