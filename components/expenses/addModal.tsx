@@ -26,6 +26,8 @@ type AddExpenseModalProps = {
   setOpen: (value: boolean) => void;
   reload: () => void;
   categories: AllExpenseCategoriesProps[];
+
+  user: string;
 };
 
 
@@ -34,6 +36,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   setOpen,
   categories,
   reload,
+  user,
 }) => {
   const [newData, setNewData] = useState<ExpenseProps>({
     date: dayjs().utc(),
@@ -89,6 +92,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       currency,
       category: parsedCategory,
       notes,
+      user_id: user,
     }));
 
     const { error } = await addExpense(expenses);
@@ -98,7 +102,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   const queryExpenses = async () => {
-    const { data, error } = await getExpenses({});
+    const { data, error } = await getExpenses({userId: user});
 
     if (!error) {
       console.log({ data });

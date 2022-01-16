@@ -15,11 +15,11 @@ const addExpense = async (values: ExpenseParams[]) => {
     .from('trackr_expenses')
     .insert(
       values,
+      
     );
 
     return {data, error}
 
-    console.log({data, error})
 }
 
 export { addExpense};

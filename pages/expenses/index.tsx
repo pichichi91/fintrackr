@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
 import ExpensesArea from "../../components/graphs/ExpensesArea";
-import UiBadge from "../../components/ui-badge/ui-badge";
 import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
@@ -16,6 +15,7 @@ import TableListing from "../../components/expenses/ExpensesListing";
 
 
 import currencies from './../../utils/currencies'
+import { useUser } from "@clerk/nextjs";
 
 
 const months = [
@@ -69,16 +69,60 @@ const months = [
   },
 ];
 
-type DaysType = Record<string, number>;
-
 type ExpensesProps = {
-  queriedExpenses: AllExpensesProps[];
   queriedCategories: AllExpenseCategoriesProps[];
 };
+
+type DailyExpenseProps = {
+  date: string;
+  total: number;
+}
+
+export type SummedExpensesProps =  DailyExpenseProps  & { totalSum: number}
+
+export type ParsedExpensesProps = {
+  dailyExpenses: DailyExpenseProps[];
+  summedUpExpenses: SummedExpensesProps[];
+}
+
+const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
+  const groupByDate = expenses.reduce(
+    (result: any, currentItem: AllExpensesProps) => {
+      (result[currentItem.date] = result[currentItem.date] || []).push(
+        currentItem
+      );
+      return result;
+    },
+    {}
+  );
+
+  const dailyExpenses = Object.entries(groupByDate).map((entry: any) => {
+    const [date, expenseValues] = entry;
+
+    const unified = expenseValues.map((value: AllExpensesProps) => ({
+      ...value,
+      amount: factorObject && Object.keys(factorObject).includes(value.currency) ? value.amount * factorObject[value.currency]: value.amount,
+    }));
+    const total = unified
+      .reduce((s: number, v: AllExpensesProps) => s + v.amount, 0)
+
+    return { date: date + 'T00:00:00.000Z' , total};
+  });
+
+  const summedUpExpenses = dailyExpenses.map((day, index) => ({
+    ...day,
+    totalSum: dailyExpenses.slice(0, index + 1).reduce((a, b) => a + b.total, 0),
+  }));
+
+  return { dailyExpenses, summedUpExpenses };
+};
+
+
 const Expenses: React.FC<ExpensesProps> = ({
-  queriedExpenses,
   queriedCategories,
 }) => {
+  const user =  useUser();
+  const queriedExpenses: AllExpensesProps[] = [];
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const [selectedMonth, setSelectedMonth] = useState(1);
@@ -86,6 +130,8 @@ const Expenses: React.FC<ExpensesProps> = ({
   const [currencyFactors, setCurrencyFactors] = useState();
 
   const [expenses, setExpenses] = useState(queriedExpenses);
+  const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({ dailyExpenses: [], summedUpExpenses: [] });
+
   const [stats, setStats] = useState({
     monthlyTotal: 0,
     dailyAverage: 0,
@@ -93,6 +139,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   });
 
   const reloadExpenses = async () => {
+
     const startDate = dayjs()
       .add(selectedMonth - 1, "month")
       .startOf("month")
@@ -102,11 +149,14 @@ const Expenses: React.FC<ExpensesProps> = ({
       .endOf("month")
       .format("YYYY-MM-DD");
 
-    const filters = { startDate, endDate };
+      const {id: userId} = user;
+
+    const filters = { startDate, endDate, userId };
 
     const { data: queriedExpenses } = await getExpenses(filters);
 
-    setExpenses(queriedExpenses!);
+    setExpenses(queriedExpenses || []);
+    setParsedExpenses(parseExpenses(queriedExpenses!, currencyFactors));
   };
 
   const deleteExpenseAndReload = (id: string) => {
@@ -133,6 +183,10 @@ const Expenses: React.FC<ExpensesProps> = ({
   };
 
   useEffect(() => {
+
+
+
+
     getCurrencyFactors().then((factors) => {
       const factorObject: any = {};
 
@@ -142,9 +196,11 @@ const Expenses: React.FC<ExpensesProps> = ({
 
       setCurrencyFactors(factorObject);
 
+      const { dailyExpenses, summedUpExpenses} = parseExpenses(expenses || [], factorObject)
+      setParsedExpenses({ dailyExpenses, summedUpExpenses} );
+
       const monthlyTotal = Number(
-        expenses
-          .reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
+        expenses?.reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
           .toFixed(0)
       );
 
@@ -153,7 +209,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         return;
       }
 
-      const expensesUntilToday = expenses.filter((expense) => {
+      const expensesUntilToday = expenses?.filter((expense) => {
         const expenseDate = dayjs(expense.date)
           .startOf("day")
           .isBefore(dayjs().add(1, "day").startOf("day"));
@@ -161,7 +217,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         if (expenseDate) return expense;
       });
 
-      if (expensesUntilToday.length === 0) {
+      if (expensesUntilToday?.length === 0) {
         setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0 });
         return;
       }
@@ -169,7 +225,7 @@ const Expenses: React.FC<ExpensesProps> = ({
 
 
 
-      const totalUntilNow = expensesUntilToday.reduce(
+      const totalUntilNow = expensesUntilToday?.reduce(
         (s, v) => s + v.amount * factorObject[v.currency],
         0
       );
@@ -180,8 +236,6 @@ const Expenses: React.FC<ExpensesProps> = ({
 
       const daysOfMonth = Number(dayjs().endOf("month").format("D"));
 
-      console.log({ daysOfMonth, totalUntilNow });
-
       setStats({
         monthlyTotal,
         dailyAverage,
@@ -190,6 +244,8 @@ const Expenses: React.FC<ExpensesProps> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
+
+
 
   return (
     <>
@@ -278,7 +334,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       </div>
 
       <div className="flex rounded justify-center mt-8 mb-8">
-        <ExpensesArea width={1000} height={400} />
+        <ExpensesArea currencyLabel={currencies.find(currency => currency.value === selectedCurrency)?.label || ''} parsedExpenses={parsedExpenses} width={1000} height={400} />
       </div>
 
       <div className="mt-8 mb-4 flex justify-end">
@@ -292,7 +348,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         <TableListing
           currency={selectedCurrency}
           currencyFactors={currencyFactors}
-          expenses={expenses.filter((expense) =>
+          expenses={expenses?.filter((expense) =>
             dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
           )}
           type="DAY"
@@ -314,6 +370,7 @@ const Expenses: React.FC<ExpensesProps> = ({
           reload={reloadExpenses}
           isOpen={modalIsOpen}
           setOpen={setIsOpen}
+          user={user.id}
         />
       )}
     </>
@@ -321,13 +378,10 @@ const Expenses: React.FC<ExpensesProps> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const startDate = dayjs().startOf("month").format("YYYY-MM-DD");
-  const endDate = dayjs().endOf("month").format("YYYY-MM-DD");
-  const { data: queriedExpenses } = await getExpenses({ startDate, endDate });
-  const { data: queriedCategories } = await getExpenseCategories();
+const { data: queriedCategories } = await getExpenseCategories();
 
   return {
-    props: { queriedExpenses, queriedCategories }, // will be passed to the page component as props
+    props: {queriedCategories }, // will be passed to the page component as props
   };
 };
 export default Expenses;
