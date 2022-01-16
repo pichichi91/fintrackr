@@ -31,9 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
               Expenses
             </a>
           </Link>
-          <Link href="/revenue">
-            <a className="hover:text-indigo-800 flex  items-center ">Revenue</a>
-          </Link>
+
 
           <SignedIn>
             <div className="ml-4 mt-2 mr-1">

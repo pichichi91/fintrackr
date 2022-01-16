@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
 import ExpensesArea from "../../components/graphs/ExpensesArea";
-import UiBadge from "../../components/ui-badge/ui-badge";
 import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
@@ -74,6 +73,51 @@ type ExpensesProps = {
   queriedCategories: AllExpenseCategoriesProps[];
 };
 
+type DailyExpenseProps = {
+  date: string;
+  total: number;
+}
+
+export type SummedExpensesProps =  DailyExpenseProps  & { totalSum: number}
+
+export type ParsedExpensesProps = {
+  dailyExpenses: DailyExpenseProps[];
+  summedUpExpenses: SummedExpensesProps[];
+}
+
+const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
+  const groupByDate = expenses.reduce(
+    (result: any, currentItem: AllExpensesProps) => {
+      (result[currentItem.date] = result[currentItem.date] || []).push(
+        currentItem
+      );
+      return result;
+    },
+    {}
+  );
+
+  const dailyExpenses = Object.entries(groupByDate).map((entry: any) => {
+    const [date, expenseValues] = entry;
+
+    const unified = expenseValues.map((value: AllExpensesProps) => ({
+      ...value,
+      amount: factorObject && Object.keys(factorObject).includes(value.currency) ? value.amount * factorObject[value.currency]: value.amount,
+    }));
+    const total = unified
+      .reduce((s: number, v: AllExpensesProps) => s + v.amount, 0)
+
+    return { date: date + 'T00:00:00.000Z' , total};
+  });
+
+  const summedUpExpenses = dailyExpenses.map((day, index) => ({
+    ...day,
+    totalSum: dailyExpenses.slice(0, index + 1).reduce((a, b) => a + b.total, 0),
+  }));
+
+  return { dailyExpenses, summedUpExpenses };
+};
+
+
 const Expenses: React.FC<ExpensesProps> = ({
   queriedCategories,
 }) => {
@@ -86,6 +130,8 @@ const Expenses: React.FC<ExpensesProps> = ({
   const [currencyFactors, setCurrencyFactors] = useState();
 
   const [expenses, setExpenses] = useState(queriedExpenses);
+  const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({ dailyExpenses: [], summedUpExpenses: [] });
+
   const [stats, setStats] = useState({
     monthlyTotal: 0,
     dailyAverage: 0,
@@ -110,6 +156,7 @@ const Expenses: React.FC<ExpensesProps> = ({
     const { data: queriedExpenses } = await getExpenses(filters);
 
     setExpenses(queriedExpenses || []);
+    setParsedExpenses(parseExpenses(queriedExpenses!, currencyFactors));
   };
 
   const deleteExpenseAndReload = (id: string) => {
@@ -136,6 +183,10 @@ const Expenses: React.FC<ExpensesProps> = ({
   };
 
   useEffect(() => {
+
+
+
+
     getCurrencyFactors().then((factors) => {
       const factorObject: any = {};
 
@@ -144,6 +195,9 @@ const Expenses: React.FC<ExpensesProps> = ({
       });
 
       setCurrencyFactors(factorObject);
+
+      const { dailyExpenses, summedUpExpenses} = parseExpenses(expenses || [], factorObject)
+      setParsedExpenses({ dailyExpenses, summedUpExpenses} );
 
       const monthlyTotal = Number(
         expenses?.reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
@@ -190,6 +244,8 @@ const Expenses: React.FC<ExpensesProps> = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
+
+
 
   return (
     <>
@@ -278,7 +334,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       </div>
 
       <div className="flex rounded justify-center mt-8 mb-8">
-        <ExpensesArea width={1000} height={400} />
+        <ExpensesArea currencyLabel={currencies.find(currency => currency.value === selectedCurrency)?.label || ''} parsedExpenses={parsedExpenses} width={1000} height={400} />
       </div>
 
       <div className="mt-8 mb-4 flex justify-end">

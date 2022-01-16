@@ -1,43 +1,53 @@
-import React, { useMemo, useCallback } from 'react';
-import { AreaClosed, Line, Bar } from '@visx/shape';
-import appleStock, { AppleStock } from '@visx/mock-data/lib/mocks/appleStock';
-import { curveMonotoneX } from '@visx/curve';
-import { GridRows, GridColumns } from '@visx/grid';
-import { scaleTime, scaleLinear } from '@visx/scale';
-import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
-import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
-import { localPoint } from '@visx/event';
-import { LinearGradient } from '@visx/gradient';
-import { max, extent, bisector } from 'd3-array';
-import { timeFormat } from 'd3-time-format';
+import React, { useMemo, useCallback } from "react";
+import { AreaClosed, Line, Bar } from "@visx/shape";
+import appleStock from "@visx/mock-data/lib/mocks/appleStock";
+import { curveMonotoneX } from "@visx/curve";
+import { GridRows, GridColumns } from "@visx/grid";
+import { scaleTime, scaleLinear } from "@visx/scale";
+import {
+  withTooltip,
+  Tooltip,
+  TooltipWithBounds,
+  defaultStyles,
+} from "@visx/tooltip";
+import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
+import { localPoint } from "@visx/event";
+import { LinearGradient } from "@visx/gradient";
+import { max, extent, bisector } from "d3-array";
+import { timeFormat } from "d3-time-format";
+import { ParsedExpensesProps, SummedExpensesProps } from "../../pages/expenses";
+import { FaBorderNone } from "react-icons/fa";
 
-type TooltipData = AppleStock;
+type TooltipData = SummedExpensesProps;
 
-const stock = appleStock.slice(800);
-export const background = '#3b6978';
-export const background2 = '#204051';
-export const accentColor = '#4412df6b';
-export const accentColorDark = '#4412df';
+const stock = appleStock.slice(0, 30);
+
+export const background = "#3b6978";
+export const background2 = "#204051";
+export const accentColor = "#4412df6b";
+export const accentColorDark = "#4412df";
 const tooltipStyles = {
   ...defaultStyles,
-  background,
-  border: '1px solid white',
-  color: 'white',
+  background: '#4f46e4',
+  color: "white",
 };
 
 // util
 const formatDate = timeFormat("%b %d, %Y");
 
 
+
 // accessors
-const getDate = (d: AppleStock) => new Date(d.date);
-const getStockValue = (d: AppleStock) => d.close;
-const bisectDate = bisector<AppleStock, Date>((d) => new Date(d.date)).left;
+const getDate = (d: SummedExpensesProps) => new Date(d.date);
+const getStockValue = (d: SummedExpensesProps) => Number(d.totalSum.toFixed(0));
+const bisectDate = bisector<SummedExpensesProps, Date>((d) => new Date(d.date)).left;
 
 export type AreaProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
+  parsedExpenses: ParsedExpensesProps;
+  currencyLabel: string;
 };
 
 const ExpensesArea = withTooltip<AreaProps, TooltipData>(
@@ -50,6 +60,8 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
+    parsedExpenses,
+    currencyLabel,
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
     if (width < 10) return null;
 
@@ -57,36 +69,45 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
+    const { summedUpExpenses } = parsedExpenses;
     // scales
     const dateScale = useMemo(
       () =>
         scaleTime({
           range: [margin.left, innerWidth + margin.left],
-          domain: extent(stock, getDate) as [Date, Date],
+          domain: extent(summedUpExpenses, getDate) as [Date, Date],
         }),
-      [innerWidth, margin.left],
+      [innerWidth, margin.left, summedUpExpenses]
     );
     const stockValueScale = useMemo(
       () =>
         scaleLinear({
           range: [innerHeight + margin.top, margin.top],
-          domain: [0, (max(stock, getStockValue) || 0) + innerHeight / 3],
+          domain: [0, (max(summedUpExpenses, getStockValue) || 0) + innerHeight / 3],
           nice: true,
         }),
-      [margin.top, innerHeight],
+      [innerHeight, margin.top, summedUpExpenses]
     );
 
     // tooltip handler
     const handleTooltip = useCallback(
-      (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+      (
+        event:
+          | React.TouchEvent<SVGRectElement>
+          | React.MouseEvent<SVGRectElement>
+      ) => {
         const { x } = localPoint(event) || { x: 0 };
         const x0 = dateScale.invert(x);
-        const index = bisectDate(stock, x0, 1);
-        const d0 = stock[index - 1];
-        const d1 = stock[index];
+        const index = bisectDate(summedUpExpenses, x0, 1);
+        const d0 = summedUpExpenses[index - 1];
+        const d1 = summedUpExpenses[index];
         let d = d0;
         if (d1 && getDate(d1)) {
-          d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
+          d =
+            x0.valueOf() - getDate(d0).valueOf() >
+            getDate(d1).valueOf() - x0.valueOf()
+              ? d1
+              : d0;
         }
         showTooltip({
           tooltipData: d,
@@ -94,7 +115,7 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
           tooltipTop: stockValueScale(getStockValue(d)),
         });
       },
-      [showTooltip, stockValueScale, dateScale],
+      [dateScale, summedUpExpenses, showTooltip, stockValueScale, ]
     );
 
     return (
@@ -109,7 +130,12 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
             rx={14}
           />
 
-          <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.001} />
+          <LinearGradient
+            id="area-gradient"
+            from={accentColor}
+            to={accentColor}
+            toOpacity={0.001}
+          />
           <GridRows
             left={margin.left}
             scale={stockValueScale}
@@ -128,8 +154,8 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
             strokeOpacity={0.2}
             pointerEvents="none"
           />
-          <AreaClosed<AppleStock>
-            data={stock}
+          <AreaClosed<SummedExpensesProps>
+            data={summedUpExpenses}
             x={(d) => dateScale(getDate(d)) ?? 0}
             y={(d) => stockValueScale(getStockValue(d)) ?? 0}
             yScale={stockValueScale}
@@ -191,7 +217,7 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
               left={tooltipLeft + 12}
               style={tooltipStyles}
             >
-              {`$${getStockValue(tooltipData)}`}
+              {`${getStockValue(tooltipData)} ${currencyLabel}`}
             </TooltipWithBounds>
             <Tooltip
               top={innerHeight + margin.top - 14}
@@ -199,8 +225,8 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
               style={{
                 ...defaultStyles,
                 minWidth: 72,
-                textAlign: 'center',
-                transform: 'translateX(-50%)',
+                textAlign: "center",
+                transform: "translateX(-50%)",
               }}
             >
               {formatDate(getDate(tooltipData))}
@@ -209,7 +235,7 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
         )}
       </div>
     );
-  },
+  }
 );
 
 export default ExpensesArea;
