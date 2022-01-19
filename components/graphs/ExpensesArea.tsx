@@ -109,9 +109,12 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
               ? d1
               : d0;
         }
+
+        console.log({tooltipLeft})
         showTooltip({
           tooltipData: d,
           tooltipLeft: x,
+          
           tooltipTop: stockValueScale(getStockValue(d)),
         });
       },
@@ -214,23 +217,22 @@ const ExpensesArea = withTooltip<AreaProps, TooltipData>(
             <TooltipWithBounds
               key={Math.random()}
               top={tooltipTop - 12}
-              left={tooltipLeft + 12}
+              left={tooltipLeft }
               style={tooltipStyles}
             >
               {`${getStockValue(tooltipData)} ${currencyLabel}`}
             </TooltipWithBounds>
-            <Tooltip
-              top={innerHeight + margin.top - 14}
+            <TooltipWithBounds
+              top={innerHeight + margin.top}
               left={tooltipLeft}
               style={{
                 ...defaultStyles,
                 minWidth: 72,
                 textAlign: "center",
-                transform: "translateX(-50%)",
               }}
             >
               {formatDate(getDate(tooltipData))}
-            </Tooltip>
+            </TooltipWithBounds>
           </div>
         )}
       </div>
