@@ -16,7 +16,7 @@ textarea {
   resize: none;
 }
 
-.super-title {
+.super-title, .cl-logo {
 
   font-family: 'Kanit', sans-serif;
     @apply font-bold text-4xl lg:text-5xl text-indigo-800 ;
@@ -82,4 +82,16 @@ tbody tr {
     margin-right: 4em !important;
   }
   
+}
+
+.cl-component.cl-sign-in {
+  margin: 0;
+
+}
+
+.signed-out-bg {
+  background-image: url('/bg.png');
+  background-repeat: no-repeat, repeat;
+  background-color: #cccccc;
+
 }

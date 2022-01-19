@@ -1,8 +1,8 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignIn, SignUp } from '@clerk/nextjs'
 
 const SignInPage = () => (
   <div className='signed-out-bg h-screen flex justify-center items-center'>
-  <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+  <SignUp path="/sign-up" />
   </div>
 )
 

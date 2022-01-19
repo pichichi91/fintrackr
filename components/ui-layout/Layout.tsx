@@ -17,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
     <div className="mx-2 sm:mx-12 lg:w-2/3  overflow-hidden  ">
       <div className="flex mb-12 flex-col md:flex-row justify-between">
         <div>
-          <Link href="/">
+          <Link href="/expenses">
             <a>
               <h1 className=" text-center md:text-left super-title">
                 fintrackr
@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
         </div>
         <div className="flex justify-center md:justify-start text-lg font-bold mt-3 ">
           <Link href="/expenses">
-            <a className="mr-4 hover:text-indigo-800 flex  items-center">
+            <a className=" mr-4 hover:text-indigo-800 flex  items-center">
               Expenses
             </a>
           </Link>

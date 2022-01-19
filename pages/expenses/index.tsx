@@ -16,6 +16,7 @@ import TableListing from "../../components/expenses/ExpensesListing";
 
 import currencies from './../../utils/currencies'
 import { useUser } from "@clerk/nextjs";
+import UiLoading from "../../components/ui-loading/UiLoading";
 
 
 const months = [
@@ -132,6 +133,8 @@ const Expenses: React.FC<ExpensesProps> = ({
   const [expenses, setExpenses] = useState(queriedExpenses);
   const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({ dailyExpenses: [], summedUpExpenses: [] });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [stats, setStats] = useState({
     monthlyTotal: 0,
     dailyAverage: 0,
@@ -139,7 +142,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   });
 
   const reloadExpenses = async () => {
-
+    setIsLoading(true);
     const startDate = dayjs()
       .add(selectedMonth - 1, "month")
       .startOf("month")
@@ -157,9 +160,12 @@ const Expenses: React.FC<ExpensesProps> = ({
 
     setExpenses(queriedExpenses || []);
     setParsedExpenses(parseExpenses(queriedExpenses!, currencyFactors));
+    setIsLoading(false);
+
   };
 
   const deleteExpenseAndReload = (id: string) => {
+    setIsLoading(true);
     deleteExpense(id);
     reloadExpenses();
   };
@@ -247,8 +253,8 @@ const Expenses: React.FC<ExpensesProps> = ({
 
 
 
-  return (
-    <>
+  return isLoading ? <UiLoading /> :  (
+<>
       <div className="flex flex-col md:flex-row mt-4 justify-between">
         <div className="flex items-center justify-center md:justify-start">
           <h1 className="font-bold text-2xl">Expenses 2022</h1>
@@ -374,6 +380,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         />
       )}
     </>
+  
   );
 };
 

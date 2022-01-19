@@ -11,6 +11,7 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("America/New_York");
 
 import currencies from './../../utils/currencies'
+import UiLoading from "../ui-loading/UiLoading";
 type ExpenseProps = {
   date?: Dayjs;
   amount: number;
@@ -48,6 +49,9 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     splitBy: "days",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const changeSplit = (e: ChangeEvent<HTMLSelectElement>) => {
     const splitBy = e.target.value as "days" | "months";
     setNewData({ ...newData, splitBy });
@@ -78,6 +82,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const { date, amount, currency, days, category, notes } = newData;
 
     const splittedAmount = amount / days;
@@ -99,6 +104,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     if (!error) setOpen(false);
     reload();
+    setIsLoading(false);
+
   };
 
   const queryExpenses = async () => {
@@ -123,7 +130,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     // references are now sync'd and can be accessed.
   }
 
-  return (
+  return isLoading ? <UiLoading /> :(
     <>
       <div className=" justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative top-28 md:top-0 w-auto md:my-6 mx-auto max-w-3xl">

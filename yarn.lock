@@ -3573,6 +3573,11 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-loader-spinner@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/react-loader-spinner/-/react-loader-spinner-5.0.8.tgz#e451ed3be2c6b75fcb5cdba106d7ea03e6ed212f"
+  integrity sha512-VpX+RFRdEhrH3ju+NiLcN/Oryaw7ZquH6qFHkwXU0/yhgCjeDgqoq0C/pQD8m6F0Dm8SuVXovckDL/65YBjgcw==
+
 react-modal@^3.14.4:
   version "3.14.4"
   resolved "https://registry.npmjs.org/react-modal/-/react-modal-3.14.4.tgz"

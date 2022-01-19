@@ -1,6 +1,7 @@
 import "../styles/globals.scss";
 import {
   ClerkProvider,
+  RedirectToSignIn,
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
@@ -30,7 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             </Layout>
           </SignedIn>
           <SignedOut>
-            <main>
+            <div className="signed-out-bg h-screen flex justify-center items-center text-center">
+            <main className="border-2 border-indigo-500 rounded-lg p-12 shadow-lg">
+              <h1 className="super-title"> fintrackr</h1>
               <p>
                 Please{" "}
                 <Link href="/sign-in">
@@ -39,6 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 to access this page.
               </p>
             </main>
+            </div>
           </SignedOut>
         </>
       )}
