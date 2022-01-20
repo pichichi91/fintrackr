@@ -33,7 +33,6 @@ type AddExpenseModalProps = {
 
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
-  isOpen,
   setOpen,
   categories,
   reload,
