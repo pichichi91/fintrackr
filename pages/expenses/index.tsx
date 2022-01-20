@@ -339,10 +339,13 @@ const Expenses: React.FC<ExpensesProps> = ({
         </div>
       </div>
 
+ { 
+   stats.prognosedTotal / stats.dailyAverage > 1 && 
+
       <div className="flex rounded justify-center mt-8 mb-8">
         <ExpensesArea currencyLabel={currencies.find(currency => currency.value === selectedCurrency)?.label || ''} parsedExpenses={parsedExpenses} width={1000} height={400} />
       </div>
-
+ }
       <div className="mt-8 mb-4 flex justify-end">
         <button className="primary" onClick={() => setIsOpen(true)}>
           Add Entry

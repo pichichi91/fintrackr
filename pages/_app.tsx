@@ -9,8 +9,12 @@ import { useRouter } from "next/router";
 import { AppProps } from "next/dist/shared/lib/router/router";
 import Link from "next/link";
 import Layout from "../components/ui-layout/Layout";
+import { DefaultSeo, NextSeo } from "next-seo";
 
-const publicPages: string[] = [ '/sign-in/[[...index]]', '/sign-up/[[...index]]']
+const publicPages: string[] = [
+  "/sign-in/[[...index]]",
+  "/sign-up/[[...index]]",
+];
 
 function MyApp({ Component, pageProps }: AppProps) {
   // Get the pathname
@@ -20,28 +24,41 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ClerkProvider>
+      <DefaultSeo
+        openGraph={{
+          type: "website",
+          locale: "en_IE",
+          url: "https://www.fintrackr.io/",
+          site_name: "fintrackr",
+          description: 'Track your expenses easily',
+        }}
+        twitter={{
+          cardType: "summary_large_image",
+        }}
+      />
+          <NextSeo nofollow={true} />
+
       {isPublicPage ? (
         <Component {...pageProps} />
       ) : (
         <>
           <SignedIn>
-          <Layout>
-
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
             </Layout>
           </SignedIn>
           <SignedOut>
             <div className="signed-out-bg h-screen flex justify-center items-center text-center">
-            <main className="border-2 border-indigo-500 rounded-lg p-12 shadow-lg">
-              <h1 className="super-title"> fintrackr</h1>
-              <p>
-                Please{" "}
-                <Link href="/sign-in">
-                  <a className=" font-bold text-indigo-700">sign in</a>
-                </Link>{" "}
-                to access this page.
-              </p>
-            </main>
+              <main className="border-2 border-indigo-500 rounded-lg p-12 shadow-lg">
+                <h1 className="super-title"> fintrackr</h1>
+                <p>
+                  Please{" "}
+                  <Link href="/sign-in">
+                    <a className=" font-bold text-indigo-700">sign in</a>
+                  </Link>{" "}
+                  to access this page.
+                </p>
+              </main>
             </div>
           </SignedOut>
         </>
