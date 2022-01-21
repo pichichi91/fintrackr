@@ -17,6 +17,7 @@ import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
 import { ExpensesProps, ParsedExpensesProps } from "./types";
 import SummaryBox from "./components/SummaryBox";
+import ExpensesNavigation from "./components/ExpensesNavigation";
 
 const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
   const groupByDate = expenses.reduce(
@@ -190,9 +191,12 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     <UiLoading />
   ) : (
     <>
+
+<ExpensesNavigation activeItem="daily" />
+
       <div className="flex flex-col md:flex-row mt-4 justify-between">
         <div className="flex items-center justify-center md:justify-start">
-          <h1 className="font-bold text-2xl">Expenses 2022</h1>
+          <h1 className="font-bold text-4xl">Expenses 2022</h1>
         </div>
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
           <div className="flex mt-2 md:mt-0 ">
@@ -246,19 +250,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
       </div>
 
-      {stats.prognosedTotal / stats.dailyAverage > 1 && (
-        <div className="flex rounded justify-center mt-8 mb-8">
-          <ExpensesArea
-            currencyLabel={
-              currencies.find((currency) => currency.value === selectedCurrency)
-                ?.label || ""
-            }
-            parsedExpenses={parsedExpenses}
-            width={1000}
-            height={400}
-          />
-        </div>
-      )}
+
 
       <div className="my-8 ">
         <h2 className="font-bold text-2xl mb-8">Expenses Today</h2>
@@ -274,14 +266,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         />
       </div>
 
-      <div className="my-4 mt-12 "></div>
-      <h2 className="font-bold text-2xl mb-8">This month expenses</h2>
-      <ExpenseListing
-        currency={selectedCurrency}
-        currencyFactors={currencyFactors}
-        expenses={expenses}
-        deleteAction={deleteExpenseAndReload}
-      />
       {modalIsOpen && (
         <AddExpenseModal
           categories={queriedCategories}

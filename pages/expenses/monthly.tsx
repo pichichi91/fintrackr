@@ -16,6 +16,7 @@ import ExpenseListing from "../../components/expenses/ExpenseListing";
 import { ExpensesProps, ParsedExpensesProps } from "./types";
 import SummaryBox from "./components/SummaryBox";
 import CategoryListing from "../../components/expenses/CategoryListing";
+import ExpensesNavigation from "./components/ExpensesNavigation";
 
 const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
   const groupBy = expenses.reduce(
@@ -215,6 +216,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     <UiLoading />
   ) : (
     <>
+<ExpensesNavigation activeItem="monthly" />
+
       <div className="flex flex-col md:flex-row mt-4 justify-between">
         <div className="flex items-center justify-center md:justify-start">
           <h1 className="font-bold text-2xl">Expenses 2022</h1>
