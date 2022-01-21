@@ -11,7 +11,6 @@ import {
   AllExpenseCategoriesProps,
   getExpenseCategories,
 } from "../../api/expense-categories/get-categories";
-import TableListing from "../../components/expenses/ExpensesListingTable";
 
 import currencies from "./../../utils/currencies";
 import { useUser } from "@clerk/nextjs";
