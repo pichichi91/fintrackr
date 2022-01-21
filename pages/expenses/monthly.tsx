@@ -230,9 +230,9 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         </div>
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
           <div className="flex mt-2 md:mt-0 ">
-            <label className="flex flex-row ">
+            <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
-                <span className=" hidden sm:inline mr-8 sm:mr-1 text-md  text-gray-400 ">
+                <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
                   Month
                 </span>
               </div>
@@ -251,9 +251,9 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
             </label>
           </div>
           <div className="flex mt-2 md:mt-0 ml-0 md:ml-4">
-            <label className="flex flex-row ">
+            <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
-                <span className=" hidden sm:inline mr-3 sm:mr-2 text-md text-gray-400 ">
+                <span className=" hidden sm:inline mr-3 sm:mr-2 text-sm text-gray-400 ">
                   Currency
                 </span>
               </div>

@@ -12,6 +12,7 @@ type ExpenseListingProps = {
   currency: string;
   type?: "DEFAULT" | "DAY" | 'CATEGORY';
   addAction?: () => void;
+  dailyAverage?: number; 
 };
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   expenses,
@@ -20,7 +21,17 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   currencyFactors,
   type = "DEFAULT",
   addAction,
-}) => (
+  dailyAverage = 0
+}) => {
+
+  const total = Number(expenses
+  .reduce((i, c) => i + c.amount * currencyFactors[c.currency], 0)
+  .toFixed(2));
+
+  const dailyDifference = total - dailyAverage
+  
+  
+  return (
   <div className="flex flex-col md:flex-row">
     {type === "DAY" && (
       <div className="mr-6 mb-4  font-bold flex flex-col items-start  ">
@@ -38,14 +49,13 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
           <h3>Total</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">
-              {expenses
-                .reduce((i, c) => i + c.amount * currencyFactors[c.currency], 0)
-                .toFixed(2)}
+              {total}
             </div>
             <div className=" mt-1 font-bold text-sm text-indigo-600 ">
               {currency}
             </div>
           </div>
+          <div className={`flex ${dailyDifference > 0 ?   'text-red-400' : 'text-green-600'} `}> {dailyDifference > 0 ? '+' : '-'} {dailyDifference} <div className=" text-gray-500 text-xs ml-1 mt-1">vs average</div> </div>
         </div>
       </div>
     )}
@@ -115,6 +125,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
       ))}
     </div>
   </div>
-);
+)
+    }
 
 export default ExpenseListingTable;
