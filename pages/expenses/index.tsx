@@ -2,16 +2,13 @@ import dayjs from "dayjs";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
-import ExpensesArea from "../../components/graphs/ExpensesArea";
 import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
 import { deleteExpense } from "../../api/expenses/delete-expense";
-import {
-  getExpenseCategories,
-} from "../../api/expense-categories/get-categories";
+import { getExpenseCategories } from "../../api/expense-categories/get-categories";
 
-import {months, currencies} from "./../../utils";
+import { months, currencies } from "./../../utils";
 import { useUser } from "@clerk/nextjs";
 import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
@@ -191,17 +188,15 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     <UiLoading />
   ) : (
     <>
-
-<ExpensesNavigation activeItem="daily" />
+      <ExpensesNavigation activeItem="daily" />
 
       <div className="flex flex-col md:flex-row mt-0 justify-between">
-        <div className="flex items-center justify-center md:justify-start">
-        </div>
+        <div className="flex items-center justify-center md:justify-start"></div>
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
           <div className="flex mt-2 md:mt-0 ">
-            <label className="flex flex-row ">
+            <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
-                <span className=" hidden sm:inline mr-8 sm:mr-1 text-md  text-gray-400 ">
+                <span className=" hidden sm:inline mr-4 sm:mr-1 text-sm  text-gray-400 ">
                   Month
                 </span>
               </div>
@@ -219,10 +214,10 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-          <div className="flex mt-2 md:mt-0 ml-0 md:ml-4">
-            <label className="flex flex-row ">
+          <div className="flex mt-2 md:mt-0 ml-0 md:ml-1">
+            <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
-                <span className=" hidden sm:inline mr-3 sm:mr-2 text-md text-gray-400 ">
+                <span className="hidden sm:inline mr-3 sm:mr-2 text-sm text-gray-400 ">
                   Currency
                 </span>
               </div>
@@ -242,14 +237,23 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         </div>
       </div>
       <div className="flex mt-4 sm:mt-8 md:mt-12 flex-wrap md:flex-nowrap">
-        <SummaryBox title='Monthly total' stat={stats.monthlyTotal} currency={selectedCurrency} />
-        <SummaryBox title='Daily average' stat={stats.dailyAverage} currency={selectedCurrency} />
-        <SummaryBox last={true} title='Prognosed total' stat={stats.prognosedTotal} currency={selectedCurrency} />
-
-
+        <SummaryBox
+          title="Monthly total"
+          stat={stats.monthlyTotal}
+          currency={selectedCurrency}
+        />
+        <SummaryBox
+          title="Daily average"
+          stat={stats.dailyAverage}
+          currency={selectedCurrency}
+        />
+        <SummaryBox
+          last={true}
+          title="Prognosed total"
+          stat={stats.prognosedTotal}
+          currency={selectedCurrency}
+        />
       </div>
-
-
 
       <div className="my-8 ">
         <h2 className="font-bold text-2xl mb-8">Expenses Today</h2>
@@ -260,7 +264,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
             dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
           )}
           type="DAY"
-          addAction= {() => setIsOpen(true)}
+          addAction={() => setIsOpen(true)}
           deleteAction={deleteExpenseAndReload}
         />
       </div>
