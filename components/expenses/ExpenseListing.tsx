@@ -10,7 +10,7 @@ type ExpenseListingProps = {
   deleteAction?: (id: string) => void;
   currencyFactors: any;
   currency: string;
-  type?: "DEFAULT" | "DAY";
+  type?: "DEFAULT" | "DAY" | 'CATEGORY';
   addAction?: () => void;
 };
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({

@@ -7,16 +7,38 @@ import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
 import { deleteExpense } from "../../api/expenses/delete-expense";
-import {
-  getExpenseCategories,
-} from "../../api/expense-categories/get-categories";
+import { getExpenseCategories } from "../../api/expense-categories/get-categories";
 
-import {months, currencies} from "./../../utils";
+import { months, currencies } from "../../utils";
 import { useUser } from "@clerk/nextjs";
 import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
 import { ExpensesProps, ParsedExpensesProps } from "./types";
 import SummaryBox from "./components/SummaryBox";
+import CategoryListing from "../../components/expenses/CategoryListing";
+
+const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
+  const groupBy = expenses.reduce(
+    (result: any, currentItem: AllExpensesProps) => {
+      (result[currentItem.category?.name] =
+        result[currentItem.category?.name] || []).push(currentItem);
+      return result;
+    },
+    {}
+  );
+
+  return Object.entries(groupBy).map(([key, items]) => {
+    const expenseItems: any = items;
+    const value = expenseItems.reduce(
+      (s: number, v: AllExpensesProps) =>
+        s + v.amount * factorObject[v.currency],
+      0
+    );
+
+    return { key: key === "undefined" ? "" : key, value };
+  });
+
+};
 
 const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
   const groupByDate = expenses.reduce(
@@ -186,6 +208,9 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
 
+  console.log({ expenses });
+
+
   return isLoading ? (
     <UiLoading />
   ) : (
@@ -239,11 +264,21 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         </div>
       </div>
       <div className="flex mt-4 sm:mt-8 md:mt-12 flex-wrap md:flex-nowrap">
-        <SummaryBox title='Monthly total' stat={stats.monthlyTotal} currency={selectedCurrency} />
-        <SummaryBox title='Daily average' stat={stats.dailyAverage} currency={selectedCurrency} />
-        <SummaryBox title='Prognosed total' stat={stats.prognosedTotal} currency={selectedCurrency} />
-
-
+        <SummaryBox
+          title="Monthly total"
+          stat={stats.monthlyTotal}
+          currency={selectedCurrency}
+        />
+        <SummaryBox
+          title="Daily average"
+          stat={stats.dailyAverage}
+          currency={selectedCurrency}
+        />
+        <SummaryBox
+          title="Prognosed total"
+          stat={stats.prognosedTotal}
+          currency={selectedCurrency}
+        />
       </div>
 
       {stats.prognosedTotal / stats.dailyAverage > 1 && (
@@ -260,28 +295,23 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         </div>
       )}
 
-      <div className="my-8 ">
-        <h2 className="font-bold text-2xl mb-8">Expenses Today</h2>
-        <ExpenseListing
+      <div className="my-4 mt-12 ">
+        <h2 className="font-bold text-2xl mb-8">Categories</h2>
+        <CategoryListing
           currency={selectedCurrency}
-          currencyFactors={currencyFactors}
-          expenses={expenses?.filter((expense) =>
-            dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
-          )}
-          type="DAY"
-          addAction= {() => setIsOpen(true)}
-          deleteAction={deleteExpenseAndReload}
+          categories={groupByCategory(expenses, currencyFactors)}
         />
       </div>
 
-      <div className="my-4 mt-12 "></div>
-      <h2 className="font-bold text-2xl mb-8">This month expenses</h2>
-      <ExpenseListing
-        currency={selectedCurrency}
-        currencyFactors={currencyFactors}
-        expenses={expenses}
-        deleteAction={deleteExpenseAndReload}
-      />
+      <div className="my-4 mt-12 ">
+        <h2 className="font-bold text-2xl mb-8">This month expenses</h2>
+        <ExpenseListing
+          currency={selectedCurrency}
+          currencyFactors={currencyFactors}
+          expenses={expenses}
+          deleteAction={deleteExpenseAndReload}
+        />
+      </div>
       {modalIsOpen && (
         <AddExpenseModal
           categories={queriedCategories}
