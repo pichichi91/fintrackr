@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ClerkProvider>
       <DefaultSeo
+      title="fintrack.io | Track you finances easily"
         openGraph={{
           type: "website",
           locale: "en_IE",
