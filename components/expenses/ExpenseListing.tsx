@@ -28,7 +28,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   .reduce((i, c) => i + c.amount * currencyFactors[c.currency], 0)
   .toFixed(2));
 
-  const dailyDifference = total - dailyAverage
+  const dailyDifference = Number((total - dailyAverage).toFixed(0))
   
   
   return (
@@ -55,7 +55,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
               {currency}
             </div>
           </div>
-          <div className={`flex ${dailyDifference > 0 ?   'text-red-400' : 'text-green-600'} `}> {dailyDifference > 0 ? '+' : '-'} {dailyDifference} <div className=" text-gray-500 text-xs ml-1 mt-1">vs average</div> </div>
+          <div className={`flex ${dailyDifference > 0 ?   'text-red-400' : 'text-green-600'} `}> {dailyDifference > 0 && '+'} {dailyDifference} <div className=" text-gray-500 text-xs ml-1 mt-1">vs average</div> </div>
         </div>
       </div>
     )}
