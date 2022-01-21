@@ -8,7 +8,7 @@ import { Converter } from "easy-currencies";
 import { deleteExpense } from "../../api/expenses/delete-expense";
 import { getExpenseCategories } from "../../api/expense-categories/get-categories";
 
-import { months, currencies } from "./../../utils";
+import {  currencies } from "./../../utils";
 import { useUser } from "@clerk/nextjs";
 import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
@@ -65,10 +65,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const [currencyFactors, setCurrencyFactors] = useState();
 
   const [expenses, setExpenses] = useState(queriedExpenses);
-  const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({
-    dailyExpenses: [],
-    summedUpExpenses: [],
-  });
+
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -96,7 +93,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     const { data: queriedExpenses } = await getExpenses(filters);
 
     setExpenses(queriedExpenses || []);
-    setParsedExpenses(parseExpenses(queriedExpenses!, currencyFactors));
     setIsLoading(false);
   };
 
@@ -134,11 +130,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
       setCurrencyFactors(factorObject);
 
-      const { dailyExpenses, summedUpExpenses } = parseExpenses(
-        expenses || [],
-        factorObject
-      );
-      setParsedExpenses({ dailyExpenses, summedUpExpenses });
+
 
       const monthlyTotal = Number(
         expenses
@@ -191,30 +183,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
       <ExpensesNavigation activeItem="daily" />
 
       <div className="flex flex-col md:flex-row mt-0 justify-between">
-        <div className="flex items-center justify-center md:justify-start"></div>
-        <div className="flex flex-row md:justify-start justify-center sm:justify-between">
-          <div className="flex mt-2 md:mt-0 ">
-            <label className="flex flex-col ">
-              <div className="flex flex-row items-center ">
-                <span className=" hidden sm:inline mr-4 sm:mr-1 text-sm  text-gray-400 ">
-                  Month
-                </span>
-              </div>
-              <select
-                onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                value={selectedMonth}
-                className="styled-input mr-1"
-              >
-                <option value={0}>Select a month</option>
-                {months.map((month) => (
-                  <option key={month.id} value={month.id}>
-                    {month.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="flex mt-2 md:mt-0 ml-0 md:ml-1">
+        <h2 className="flex-1 font-bold text-2xl ">Today</h2>
+          <div className="flex mt-2 md:mb-8 md:mt-0 ml-0 md:ml-1">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className="hidden sm:inline mr-3 sm:mr-2 text-sm text-gray-400 ">
@@ -234,29 +204,10 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-        </div>
-      </div>
-      <div className="flex mt-4 sm:mt-8 md:mt-12 flex-wrap md:flex-nowrap">
-        <SummaryBox
-          title="Monthly total"
-          stat={stats.monthlyTotal}
-          currency={selectedCurrency}
-        />
-        <SummaryBox
-          title="Daily average"
-          stat={stats.dailyAverage}
-          currency={selectedCurrency}
-        />
-        <SummaryBox
-          last={true}
-          title="Prognosed total"
-          stat={stats.prognosedTotal}
-          currency={selectedCurrency}
-        />
       </div>
 
-      <div className="my-8 ">
-        <h2 className="font-bold text-2xl mb-8">Expenses Today</h2>
+
+      <div className=" ">
         <ExpenseListing
           currency={selectedCurrency}
           currencyFactors={currencyFactors}

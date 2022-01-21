@@ -95,6 +95,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const [selectedMonth, setSelectedMonth] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState("MXN");
   const [currencyFactors, setCurrencyFactors] = useState();
+  const [years, setYears] = useState<string[]>([dayjs().format('YYYY')])
+  const [months, setMonths] = useState<{id: string, name: string}[]>([{id: dayjs().format('M'), name:dayjs().format('MM')}])
 
   const [expenses, setExpenses] = useState(queriedExpenses);
   const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({
@@ -213,6 +215,25 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         prognosedTotal: daysOfMonth * dailyAverage,
       });
     });
+
+    const expenseYears = new Set(expenses.map(expense => dayjs(expense.date).format('YYYY')));
+
+    const expenseMonths : {id: string, name: string}[] = []
+    expenses.map(expense => {
+      
+      const date = dayjs(expense.date)
+
+      const found = months.find(month => month.name === date.format('MMMM'))
+      console.log({found })
+      if (!expenseMonths.find(month => month.name === date.format('MMMM'))) {
+        expenseMonths.push({ id: date.format('M'), name: date.format('MMMM')}) 
+      }
+    
+    
+    })
+
+    setMonths(Array.from(expenseMonths));
+    setYears(Array.from(expenseYears));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
 
@@ -233,6 +254,30 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
+                  Year
+                </span>
+              </div>
+              <select
+                onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                value={selectedMonth}
+                className="styled-input mr-1"
+                disabled={years.length === 1}
+              >
+                {years.length !== 1 &&
+                <option value={0}>Select a year</option>
+              }
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="flex mt-2 md:mt-0 ">
+            <label className="flex flex-col ">
+              <div className="flex flex-row items-center ">
+                <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
                   Month
                 </span>
               </div>
@@ -240,8 +285,11 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
                 value={selectedMonth}
                 className="styled-input mr-1"
+                disabled={months.length === 1}
               >
+                {months.length !== 1 &&
                 <option value={0}>Select a month</option>
+              }
                 {months.map((month) => (
                   <option key={month.id} value={month.id}>
                     {month.name}
@@ -250,7 +298,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-          <div className="flex mt-2 md:mt-0 ml-0 md:ml-4">
+          <div className="flex mt-2 md:mt-0 ml-0 ">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-3 sm:mr-2 text-sm text-gray-400 ">
