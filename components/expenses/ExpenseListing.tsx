@@ -67,7 +67,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
             </div>
           )}
 
-          <div className="px-6 py-4  basis-48  font-bold flex flex-col">
+          <div className="px-6 py-4  basis-44  font-bold flex flex-col">
             <div className="flex">
               <div className="mr-1 text-3xl">
                 {(

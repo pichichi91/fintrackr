@@ -11,7 +11,7 @@ const UiBadge: React.FC<BadgeProps> = ({ text, className }) => {
         <span
           className={`${className} md:hidden inline-flex items-center uppercase justify-center px-2 py-1 text-xs font-bold leading-none   rounded`}
         >
-          {text.substring(0, 15) + "..."}
+          {text.length > 15 ?  text.substring(0, 11) + "..." : text}
         </span>
       )}
       <span
