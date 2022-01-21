@@ -220,7 +220,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
       <div className="flex flex-col md:flex-row mt-4 justify-between">
         <div className="flex items-center justify-center md:justify-start">
-          <h1 className="font-bold text-2xl">Expenses 2022</h1>
         </div>
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
           <div className="flex mt-2 md:mt-0 ">

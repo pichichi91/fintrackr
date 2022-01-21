@@ -194,9 +194,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
 <ExpensesNavigation activeItem="daily" />
 
-      <div className="flex flex-col md:flex-row mt-4 justify-between">
+      <div className="flex flex-col md:flex-row mt-0 justify-between">
         <div className="flex items-center justify-center md:justify-start">
-          <h1 className="font-bold text-4xl">Expenses 2022</h1>
         </div>
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
           <div className="flex mt-2 md:mt-0 ">
@@ -245,7 +244,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
       <div className="flex mt-4 sm:mt-8 md:mt-12 flex-wrap md:flex-nowrap">
         <SummaryBox title='Monthly total' stat={stats.monthlyTotal} currency={selectedCurrency} />
         <SummaryBox title='Daily average' stat={stats.dailyAverage} currency={selectedCurrency} />
-        <SummaryBox title='Prognosed total' stat={stats.prognosedTotal} currency={selectedCurrency} />
+        <SummaryBox last={true} title='Prognosed total' stat={stats.prognosedTotal} currency={selectedCurrency} />
 
 
       </div>

@@ -7,19 +7,18 @@ type ExpensesNavigationProps = {
 const ExpensesNavigation: React.FC<ExpensesNavigationProps> = ({
   activeItem,
 }) => (
-  <nav className="flex mb-12 justify-between">
+  <nav className="flex mb-2 justify-between">
+          <h1 className="font-bold text-4xl">Expenses </h1>
     {["daily", "monthly"].map((item) => (
       <Link
         href={item === "daily" ? "/expenses" : "/expenses/monthly"}
         key={item}
       >
         <a
-          className={`capitalize w-full ${
-            item === "daily" && "md:mr-4"
-          } font-bold md:basis-1/2 md:w-1/3 mb-6  flex flex-col justify-center rounded-lg px-8 py-2 bg-gradient-to-r ${
-            activeItem === item
+          className={`capitalize w-full  font-bold md:basis-1/5  mb-6  flex flex-col justify-center rounded-lg px-8 py-2 bg-gradient-to-r ${
+            activeItem !== item
               ? "from-indigo-500 to-indigo-700 text-white"
-              : "from-indigo-50 to-indigo-100"
+              : "hidden"
           } hover:from-indigo-800 hover:to-indigo-800  hover:text-white transition-all `}
         >
           <div className="flex">
