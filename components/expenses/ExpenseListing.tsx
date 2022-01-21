@@ -23,13 +23,13 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
 }) => (
   <div className="flex flex-col md:flex-row">
     {type === "DAY" && (
-      <div className="mr-4 mb-4   font-bold flex flex-col items-start  ">
+      <div className="mr-6 mb-4   font-bold flex flex-col items-start  ">
         <button
           className=" w-full  mb-4  shadow-lg primary"
           onClick={addAction}
         >
           <div className="flex">
-            <IoIosAdd size={20} /> <p>Add Entry</p>
+            <IoIosAdd size={40} /> <div className="ml-2 flex items-center">Add Entry</div>
           </div>
         </button>
 
@@ -47,7 +47,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
       </div>
     )}
     <div className=" flex-1">
-      <div className="bg-indigo-600 opacity-70 text-white font-bold uppercase py-2 px-4 text-sm  rounded mb-4">
+      <div className=" mt-2 bg-indigo-600 opacity-70 text-white font-bold uppercase py-2 px-4 text-sm  rounded mb-7">
         Entries
       </div>
       {expenses?.map((expense) => (

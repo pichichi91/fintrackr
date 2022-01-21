@@ -357,7 +357,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
 
       <div className="my-8 ">
-        <h2 className="font-bold text-xl mb-2">Today&apos;s Expenses</h2>
+        <h2 className="font-bold text-2xl mb-8">Expenses Today</h2>
         <ExpenseListing
           currency={selectedCurrency}
           currencyFactors={currencyFactors}
@@ -371,7 +371,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
       </div>
 
       <div className="my-4 mt-12 "></div>
-      <h2 className="font-bold text-xl mb-2">This month&apos; expenses</h2>
+      <h2 className="font-bold text-2xl mb-8">This month expenses</h2>
       <ExpenseListing
         currency={selectedCurrency}
         currencyFactors={currencyFactors}
