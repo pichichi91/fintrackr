@@ -17,6 +17,7 @@ import { ExpensesProps, ParsedExpensesProps } from "../../components/types";
 import SummaryBox from "./components/SummaryBox";
 import CategoryListing from "../../components/expenses/CategoryListing";
 import ExpensesNavigation from "./components/ExpensesNavigation";
+import _ from "lodash";
 
 const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
   const groupBy = expenses.reduce(
@@ -28,6 +29,12 @@ const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
     {}
   );
 
+
+  type Category = {
+    value: number;
+    key: string
+  }
+
   return Object.entries(groupBy).map(([key, items]) => {
     const expenseItems: any = items;
     const value = expenseItems.reduce(
@@ -37,7 +44,7 @@ const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
     );
 
     return { key: key === "undefined" ? "" : key, value };
-  });
+  }).sort(( a: Category, b: Category ) => b.value - a.value);
 
 };
 
