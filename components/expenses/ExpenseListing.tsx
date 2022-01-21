@@ -13,6 +13,7 @@ type ExpenseListingProps = {
   type?: "DEFAULT" | "DAY" | 'CATEGORY';
   addAction?: () => void;
   dailyAverage?: number; 
+  prognosedTotal?: number;
 };
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   expenses,
@@ -21,7 +22,8 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   currencyFactors,
   type = "DEFAULT",
   addAction,
-  dailyAverage = 0
+  dailyAverage = 0,
+  prognosedTotal = 0,
 }) => {
 
   const total = Number(expenses
@@ -45,7 +47,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
           </div>
         </button>
 
-        <div className=" basis-14 px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+        <div className=" w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Total</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">
@@ -56,6 +58,17 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
             </div>
           </div>
           <div className={`flex ${dailyDifference > 0 ?   'text-red-400' : 'text-green-600'} `}> {dailyDifference > 0 && '+'} {dailyDifference} <div className=" text-gray-500 text-xs ml-1 mt-1">vs average</div> </div>
+        </div>
+        <div className="md:mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+          <h3>Monthly projection</h3>
+          <div className="flex">
+            <div className="mr-1 text-3xl">
+              {prognosedTotal}
+            </div>
+            <div className=" mt-1 font-bold text-sm text-indigo-600 ">
+              {currency}
+            </div>
+          </div>
         </div>
       </div>
     )}

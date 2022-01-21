@@ -10,18 +10,20 @@ type ExpenseListingProps = {
   categories: CategoryProps[];
   currency: string;
   addAction?: () => void;
+  prognosed: number;
 };
 
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   categories,
   currency,
+  prognosed
 }) => {
-  const total = categories?.reduce((i, c) => i + c.value, 0).toFixed(2);
+  const total = categories?.reduce((i, c) => i + c.value, 0).toFixed(0);
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="mr-6 mb-4  font-bold flex flex-col items-start  ">
-        <div className=" basis-14 px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+      <div className="mr-6 mb-4 basis-48 font-bold flex flex-col md:flex-col items-start  ">
+        <div className=" w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Total</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">{total}</div>
@@ -30,7 +32,17 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
             </div>
           </div>
         </div>
+        <div className="md:mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+          <h3>Prognosed</h3>
+          <div className="flex">
+            <div className="mr-1 text-3xl">{prognosed}</div>
+            <div className=" mt-1 font-bold text-sm text-indigo-600 ">
+              {currency}
+            </div>
+          </div>
       </div>
+      </div>
+
 
       <div className=" flex-1">
         <div className=" mt-2  bg-gradient-to-r from-indigo-500 to-indigo-700 opacity-70 text-white font-bold uppercase py-2 px-4 text-sm  rounded mb-7">

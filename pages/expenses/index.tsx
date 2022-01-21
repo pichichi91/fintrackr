@@ -218,6 +218,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           addAction={() => setIsOpen(true)}
           deleteAction={deleteExpenseAndReload}
           dailyAverage={stats.dailyAverage}
+          prognosedTotal={stats.prognosedTotal}
         />
       </div>
 
