@@ -7,6 +7,7 @@ export type AllExpensesProps = {
   currency: string;
   category: { name: string };
   id: string;
+  notes: string;
 };
 
 type AllExpensesParams = {
@@ -23,7 +24,7 @@ const getExpenses = async (filters: AllExpensesParams) => {
 
   const { data, error } = await supabaseClient
     .from("trackr_expenses")
-    .select("id, amount, currency, category(name), date")
+    .select("id, amount, currency, category(name), date, notes")
     .order("date")
     .gte('date', startDate)
     .lte('date', endDate)

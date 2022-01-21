@@ -9,7 +9,7 @@ type TableListingProps = {
   currency: string;
   type?: "DEFAULT" | "DAY";
 };
-const TableListing: React.FC<TableListingProps> = ({
+const ExpenseListing: React.FC<TableListingProps> = ({
   expenses,
   deleteAction,
   currency,
@@ -85,4 +85,4 @@ const TableListing: React.FC<TableListingProps> = ({
   </table>
 );
 
-export default TableListing;
+export default ExpenseListing;
