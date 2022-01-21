@@ -13,7 +13,7 @@ import { months, currencies } from "../../utils";
 import { useUser } from "@clerk/nextjs";
 import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
-import { ExpensesProps, ParsedExpensesProps } from "./types";
+import { ExpensesProps, ParsedExpensesProps } from "../../components/types";
 import SummaryBox from "./components/SummaryBox";
 import CategoryListing from "../../components/expenses/CategoryListing";
 import ExpensesNavigation from "./components/ExpensesNavigation";

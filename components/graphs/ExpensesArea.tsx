@@ -15,7 +15,7 @@ import { localPoint } from "@visx/event";
 import { LinearGradient } from "@visx/gradient";
 import { max, extent, bisector } from "d3-array";
 import { timeFormat } from "d3-time-format";
-import { ParsedExpensesProps, SummedExpensesProps } from "../../pages/expenses/types";
+import { ParsedExpensesProps, SummedExpensesProps } from "../types";
 
 type TooltipData = SummedExpensesProps;
 

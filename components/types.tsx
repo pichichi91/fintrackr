@@ -1,4 +1,4 @@
-import { AllExpenseCategoriesProps } from "../../api/expense-categories/get-categories";
+import { AllExpenseCategoriesProps } from "../api/expense-categories/get-categories";
 
 export type ExpensesProps = {
   queriedCategories: AllExpenseCategoriesProps[];
