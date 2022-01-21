@@ -15,7 +15,7 @@ const ExpensesNavigation: React.FC<ExpensesNavigationProps> = ({
         key={item}
       >
         <a
-          className={`capitalize w-full  font-bold md:basis-1/5  mb-6  flex flex-col justify-center rounded-lg px-8 py-2 bg-gradient-to-r ${
+          className={`capitalize  font-bold md:basis-1/5  mb-6  flex flex-col justify-center rounded-lg px-8 py-2 bg-gradient-to-r ${
             activeItem !== item
               ? "from-indigo-500 to-indigo-700 text-white"
               : "hidden"
