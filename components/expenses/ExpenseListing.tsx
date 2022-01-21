@@ -21,7 +21,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   type = "DEFAULT",
   addAction,
 }) => (
-  <div className="flex">
+  <div className="flex flex-col md:flex-row">
     {type === "DAY" && (
       <div className="mr-4 mb-4   font-bold flex flex-col items-start  ">
         <button
