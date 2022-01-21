@@ -80,7 +80,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
               </div>
             </div>
             <UiBadge
-              className={`${
+              className={` text-white ${
                 expense.category?.name === "Food"
                   ? "bg-green-400"
                   : "bg-indigo-400"
