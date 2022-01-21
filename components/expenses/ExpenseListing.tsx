@@ -37,7 +37,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
           <h3>Total</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">
-              {expenses.reduce((i, c) => i + c.amount *  currencyFactors[c.currency], 0)}
+              {expenses.reduce((i, c) => i + c.amount *  currencyFactors[c.currency], 0).toFixed(2)}
             </div>
             <div className=" mt-1 font-bold text-sm text-indigo-600 ">
               {currency}
