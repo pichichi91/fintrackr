@@ -23,21 +23,24 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
 }) => (
   <div className="flex flex-col md:flex-row">
     {type === "DAY" && (
-      <div className="mr-6 mb-4   font-bold flex flex-col items-start  ">
+      <div className="mr-6 mb-4  font-bold flex flex-col items-start  ">
         <button
           className=" w-full  mb-4  shadow-lg primary"
           onClick={addAction}
         >
           <div className="flex">
-            <IoIosAdd size={40} /> <div className="ml-2 flex items-center">Add Entry</div>
+            <IoIosAdd size={40} />{" "}
+            <div className="ml-2 flex items-center">Add Entry</div>
           </div>
         </button>
 
-        <div className=" basis-14 px-6 py-4 bg-indigo-200 rounded flex-grow-0">
+        <div className=" basis-14 px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Total</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">
-              {expenses.reduce((i, c) => i + c.amount *  currencyFactors[c.currency], 0).toFixed(2)}
+              {expenses
+                .reduce((i, c) => i + c.amount * currencyFactors[c.currency], 0)
+                .toFixed(2)}
             </div>
             <div className=" mt-1 font-bold text-sm text-indigo-600 ">
               {currency}
@@ -47,12 +50,12 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
       </div>
     )}
     <div className=" flex-1">
-      <div className=" mt-2 bg-indigo-600 opacity-70 text-white font-bold uppercase py-2 px-4 text-sm  rounded mb-7">
+      <div className=" mt-2  bg-gradient-to-r from-indigo-500 to-indigo-700 opacity-70 text-white font-bold uppercase py-2 px-4 text-sm  rounded mb-7">
         Entries
       </div>
       {expenses?.map((expense) => (
         <div
-          className=" bg-indigo-50 rounded mb-4 flex justify-between "
+          className=" bg-gradient-to-r from-indigo-50 to-indigo-100 rounded mb-4 flex justify-between "
           key={Math.random()}
         >
           {type === "DEFAULT" && (
@@ -61,14 +64,14 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
                 {dayjs(expense.date).format("DD")}
               </div>
               <UiBadge
-                className='mt-1 text-indigo-600 bg-indigo-100 '
+                className="mt-1 text-indigo-600 bg-indigo-100 "
                 text={dayjs(expense.date).format("MMMM")}
               />
             </div>
           )}
 
-          <div className="px-6 py-4  basis-44  font-bold flex flex-col">
-            <div className="flex">
+          <div className=" px-6 py-4  basis-44  font-bold flex flex-col">
+            <div className="flex justify-center">
               <div className="mr-1 text-3xl">
                 {(
                   expense.amount *
@@ -80,16 +83,19 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
               </div>
             </div>
             <UiBadge
-              className={` text-white ${
+              className={` ${
                 expense.category?.name === "Food"
                   ? "bg-green-400"
                   : "bg-indigo-400"
-              } mt-1`}
-              text={expense.category?.name}
+              } mt-1 ${!expense.category?.name ? 'bg-gray-300 text-black' : 'text-white'} `}
+              text={expense.category?.name || 'No category'}
             />
           </div>
           <div className="flex  flex-grow px-6 py-4 font-semibold text-indigo-500">
-            <div className="text-gray-600 text-base  mt-1"> {expense.notes}</div>
+            <div className="text-gray-600 text-base  mt-1">
+              {" "}
+              {expense.notes}
+            </div>
           </div>
 
           <div className="pl-0 md:pl-4 flex items-center">

@@ -305,7 +305,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         </div>
       </div>
       <div className="flex mt-4 sm:mt-8 md:mt-12 flex-wrap md:flex-nowrap">
-        <div className="w-full md:w-1/3 mb-6 md:mr-4 flex flex-col justify-center rounded-lg px-8 py-8 bg-indigo-50">
+        <div className="w-full md:w-1/3 mb-6 md:mr-4 flex flex-col justify-center rounded-lg px-8 py-8 bg-gradient-to-r from-indigo-50 to-indigo-100">
           <p className="text-xl font-bold">Monthly total</p>
           <div className="flex">
             <p className="flex text-left text-4xl font-bold text-indigo-800">
@@ -316,7 +316,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
             </p>
           </div>
         </div>
-        <div className="w-full md:w-1/3 mb-6 md:mr-4 flex flex-col justify-center rounded-lg px-8 py-4 bg-indigo-50">
+        <div className="w-full md:w-1/3 mb-6 md:mr-4 flex flex-col justify-center rounded-lg px-8 py-4 bg-gradient-to-r from-indigo-50 to-indigo-100">
           <p className="text-xl font-bold">Daily average</p>
           <div className="flex">
             <p className="flex text-left text-4xl font-bold text-indigo-800">
@@ -327,7 +327,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
             </p>
           </div>
         </div>
-        <div className="w-full md:w-1/3 mb-6 flex flex-col justify-center rounded-lg px-8 py-4 bg-indigo-50">
+        <div className="w-full md:w-1/3 mb-6 flex flex-col justify-center rounded-lg px-8 py-4 bg-gradient-to-r from-indigo-50 to-indigo-100">
           <p className="text-xl font-bold">Prognosed total</p>
           <div className="flex">
             <p className="flex text-left text-4xl font-bold text-indigo-800">
