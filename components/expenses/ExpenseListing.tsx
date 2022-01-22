@@ -114,7 +114,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
               text={expense.category?.name || 'No category'}
             />
           </div>
-          <div className="flex  flex-grow px-6 py-4 font-semibold text-indigo-500">
+          <div className="md:flex hidden flex-grow px-6 py-4 font-semibold text-indigo-500">
             <div className="text-gray-600 text-base  mt-1">
               {" "}
               {expense.notes}

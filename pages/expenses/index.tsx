@@ -150,7 +150,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     <div>
       <ExpensesNavigation activeItem="daily" />
 
-      <div className="flex flex-col md:flex-row mt-0 justify-between">
+      <div className="flex flex-row mt-0 justify-between">
         <h2 className="flex-1 font-bold text-2xl ">Today</h2>
           <div className="flex mt-2 md:mb-8 md:mt-0 ml-0 md:ml-1">
             <label className="flex flex-col ">

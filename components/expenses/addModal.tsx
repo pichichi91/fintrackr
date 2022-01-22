@@ -126,7 +126,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     >
       <Dialog.Overlay className="fixed inset-0 -z-10 bg-black opacity-20" />
 
-      <div className="bg-white m-16   p-8 rounded-xl">
+      <div className="bg-white m-4 md:m-16 p-4  md:p-8 rounded-xl">
         <Dialog.Title className="text-2xl font-semibold">
           Add a new expense
         </Dialog.Title>
@@ -210,7 +210,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 />
               </label>
             </div>
-            <div className="flex flex-col  md:mt-0 md:ml-8">
+            <div className="flex flex-col mt-4  md:mt-0 md:ml-8">
               <div className="">
                 <label className="flex flex-col">
                   <span>Notes</span>

@@ -247,11 +247,11 @@ const Expenses: React.FC = () => {
   >
 <ExpensesNavigation activeItem="monthly" />
 
-      <div className="flex flex-row md:flex-row mt-4 justify-between">
+      <div className={`flex ${years.length >= 1 ? 'flex-row' : 'flex-col' } md:flex-row mt-4 justify-between`}>
         <h2 className="flex-1 font-bold text-2xl ">Monthly</h2>
 
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
-          <div className="flex  ">
+          <div className={`md:flex ${years.length === 1 ? 'hidden md:flex' : 'flex'}  `}>
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
