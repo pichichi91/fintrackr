@@ -106,3 +106,7 @@ button:hover, a:hover {
   background-color: #cccccc;
 
 }
+
+[aria-modal='true'] {
+  display: block;
+}
