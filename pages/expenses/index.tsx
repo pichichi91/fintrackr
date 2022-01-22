@@ -138,6 +138,15 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   }, [expenses, selectedCurrency]);
 
   return (
+    <Transition
+    show={!isLoading}
+    enter="transition-opacity duration-200 ease-in"
+    enterFrom="opacity-0"
+    enterTo="opacity-100"
+    leave="transition-opacity duration-200 ease-in"
+    leaveFrom="opacity-100"
+    leaveTo="opacity-0"
+  >
     <div>
       <ExpensesNavigation activeItem="daily" />
 
@@ -178,19 +187,10 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           deleteAction={deleteExpenseAndReload}
           dailyAverage={stats.dailyAverage}
           prognosedTotal={stats.prognosedTotal}
-          isLoading={isLoading}
         />
       </div>
 
-      <Transition
-        show={modalIsOpen}
-        enter="transition-opacity duration-200 ease-in"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-200 ease-in"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
+
         <AddExpenseModal
           categories={queriedCategories}
           reload={reloadExpenses}
@@ -198,9 +198,10 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           setOpen={setIsOpen}
           user={user.id}
         />
-        </Transition>
       
     </div>
+    </Transition>
+
   );
 };
 

@@ -24,8 +24,9 @@ textarea {
 }
 
 .styled-input {
-  @apply  rounded border-0 bg-gray-200;
+  @apply outline-none  rounded border-0 bg-gray-200;
 
+  margin-right: 1px;
 }
 
 

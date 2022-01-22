@@ -1,15 +1,36 @@
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { SignedIn, UserButton } from "@clerk/nextjs";
+import { Transition } from "@headlessui/react";
 
 type LayoutProps = {
   children: ReactNode;
 };
 
 
-const Layout: React.FC<LayoutProps> = ({ children }) => (
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+
+    setLoaded(true);
+
+
+  }, [])
+
+  return(
   <div className=" dur  mt-8 p-2 sm:p-4 flex justify-center w-full">
     <div className="mx-2 w-full sm:mx-12 lg:w-2/3  overflow-hidden  ">
+    <Transition
+    show={loaded}
+    enter="transition-opacity duration-500 ease-in"
+    enterFrom="opacity-0"
+    enterTo="opacity-100"
+    leave="transition-opacity duration-200 ease-in"
+    leaveFrom="opacity-100"
+    leaveTo="opacity-0"
+  >
       <div className="flex mb-4 flex-row justify-between">
         <div>
           <Link href="/expenses">
@@ -35,11 +56,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
           </SignedIn>
         </div>
       </div>
+      </Transition>
 
 
       {children}
     </div>
   </div>
-);
+)};
 
 export default Layout;
