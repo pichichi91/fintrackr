@@ -27,16 +27,16 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
 }) => {
 
   const total = Number(expenses
-  .reduce((i, c) => i + c.amount * currencyFactors[c.currency], 0)
+  .reduce((i, c) => i + c.amount * (currencyFactors ?  currencyFactors[c.currency] : 1), 0)
   .toFixed(2));
 
   const dailyDifference = Number((total - dailyAverage).toFixed(0))
   
   
   return (
-  <div className="flex flex-col md:flex-row">
+  <div className="flex flex-col mt-4 md:mt-0 md:flex-row">
     {type === "DAY" && (
-      <div className="mr-6 mb-4  font-bold flex flex-col items-start  ">
+      <div className="md:mr-6 mb-4  font-bold flex flex-col items-start  ">
         <button
           className=" w-full  mb-4  shadow-lg primary"
           onClick={addAction}
@@ -59,7 +59,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
           </div>
           <div className={`flex ${dailyDifference > 0 ?   'text-red-400' : 'text-green-600'} `}> {dailyDifference > 0 && '+'} {dailyDifference} <div className=" text-gray-500 text-xs ml-1 mt-1">vs average</div> </div>
         </div>
-        <div className="md:mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+        <div className="mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Monthly projection</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">

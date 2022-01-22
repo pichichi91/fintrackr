@@ -22,7 +22,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="mr-6 mb-4 basis-48 font-bold flex flex-col md:flex-col items-start  ">
+      <div className="md:mr-6 mb-4 basis-48 font-bold flex flex-col md:flex-col items-start  ">
         <div className=" w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Total</h3>
           <div className="flex">
@@ -32,7 +32,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
             </div>
           </div>
         </div>
-        <div className="md:mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
+        <div className="mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Prognosed</h3>
           <div className="flex">
             <div className="mr-1 text-3xl">{prognosed}</div>

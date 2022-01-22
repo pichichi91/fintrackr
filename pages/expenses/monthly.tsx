@@ -38,7 +38,7 @@ const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
     const expenseItems: any = items;
     const value = expenseItems.reduce(
       (s: number, v: AllExpensesProps) =>
-        s + v.amount * factorObject[v.currency],
+        s + v.amount * (factorObject ?  factorObject[v.currency] : 1),
       0
     );
 
@@ -236,8 +236,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
 
-  console.log({ expenses });
-
 
   return isLoading ? (
     <UiLoading />
@@ -245,11 +243,11 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     <>
 <ExpensesNavigation activeItem="monthly" />
 
-      <div className="flex flex-col md:flex-row mt-4 justify-between">
+      <div className="flex flex-row md:flex-row mt-4 justify-between">
         <h2 className="flex-1 font-bold text-2xl ">Monthly</h2>
 
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
-          <div className="flex mt-2 md:mt-0 ">
+          <div className="flex  ">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
@@ -273,7 +271,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-          <div className="flex mt-2 md:mt-0 ">
+          <div className="flex  ">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
@@ -297,7 +295,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-          <div className="flex mt-2 md:mt-0 ml-0 ">
+          <div className="flex  ml-0 ">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-3 sm:mr-2 text-sm text-gray-400 ">
