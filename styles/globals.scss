@@ -63,6 +63,16 @@ tbody tr {
 }
 
 
+button:hover, a:hover {
+
+  transition: 0.5s all;
+  transform: translateY(-4px);
+}
+
+.animate {
+
+  @apply transition-all	duration-1000 ease-in	
+}
 
 
 .user-profile {

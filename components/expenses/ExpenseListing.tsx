@@ -3,7 +3,7 @@ import { AllExpensesProps } from "../../api/expenses/get-expenses";
 import UiBadge from "../ui-badge/ui-badge";
 import { ImCross } from "react-icons/im";
 import { IoIosAdd } from "react-icons/io";
-import { GrTextAlignFull } from "react-icons/gr";
+import { Transition } from "@headlessui/react";
 
 type ExpenseListingProps = {
   expenses: AllExpensesProps[];
@@ -14,6 +14,7 @@ type ExpenseListingProps = {
   addAction?: () => void;
   dailyAverage?: number; 
   prognosedTotal?: number;
+  isLoading: boolean;
 };
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   expenses,
@@ -24,6 +25,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   addAction,
   dailyAverage = 0,
   prognosedTotal = 0,
+  isLoading
 }) => {
 
   const total = Number(expenses
@@ -34,6 +36,15 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   
   
   return (
+    <Transition
+    show={!isLoading}
+    enter="transition-opacity duration-200 ease-in"
+    enterFrom="opacity-0"
+    enterTo="opacity-100"
+    leave="transition-opacity duration-200 ease-in"
+    leaveFrom="opacity-100"
+    leaveTo="opacity-0"
+  >
   <div className="flex flex-col mt-4 md:mt-0 md:flex-row">
     {type === "DAY" && (
       <div className="md:mr-6 mb-4  font-bold flex flex-col items-start  ">
@@ -138,6 +149,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
       ))}
     </div>
   </div>
+  </Transition>
 )
     }
 

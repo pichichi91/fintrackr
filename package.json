@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^2.7.0",
+    "@headlessui/react": "^1.4.3",
     "@supabase/supabase-js": "^1.29.1",
     "@tailwindcss/forms": "^0.4.0",
     "@visx/event": "^2.1.2",

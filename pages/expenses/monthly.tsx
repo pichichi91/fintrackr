@@ -103,7 +103,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     summedUpExpenses: [],
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [stats, setStats] = useState({
     monthlyTotal: 0,
@@ -237,9 +237,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   }, [expenses, selectedCurrency]);
 
 
-  return isLoading ? (
-    <UiLoading />
-  ) : (
+  return (
     <>
 <ExpensesNavigation activeItem="monthly" />
 
@@ -320,6 +318,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
       <div className="my-4 mt-4 ">
         <CategoryListing
+        isLoading={isLoading}
           currency={selectedCurrency} prognosed={stats.prognosedTotal}
           categories={groupByCategory(expenses, currencyFactors)}
         />
@@ -348,6 +347,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           currencyFactors={currencyFactors}
           expenses={expenses}
           deleteAction={deleteExpenseAndReload}
+          isLoading={isLoading}
         />
       </div>
       {modalIsOpen && (

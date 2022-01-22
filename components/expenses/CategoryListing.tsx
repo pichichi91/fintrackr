@@ -1,5 +1,6 @@
 import UiBadge from "../ui-badge/ui-badge";
 import { ImCross } from "react-icons/im";
+import { Transition } from "@headlessui/react";
 
 type CategoryProps = {
   value: number;
@@ -11,16 +12,27 @@ type ExpenseListingProps = {
   currency: string;
   addAction?: () => void;
   prognosed: number;
+  isLoading: boolean;
 };
 
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   categories,
   currency,
-  prognosed
+  prognosed,
+  isLoading
 }) => {
   const total = categories?.reduce((i, c) => i + c.value, 0).toFixed(0);
 
   return (
+    <Transition
+    show={!isLoading}
+    enter="transition-opacity duration-200 ease-in"
+    enterFrom="opacity-0"
+    enterTo="opacity-100"
+    leave="transition-opacity duration-200 ease-in"
+    leaveFrom="opacity-100"
+    leaveTo="opacity-0"
+  >
     <div className="flex flex-col md:flex-row">
       <div className="md:mr-6 mb-4 basis-48 font-bold flex flex-col md:flex-col items-start  ">
         <div className=" w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
@@ -80,6 +92,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
         ))}
       </div>
     </div>
+    </Transition>
   );
 };
 

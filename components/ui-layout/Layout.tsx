@@ -1,19 +1,14 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import { RiCommandFill } from "react-icons/ri";
-import { FaUserAstronaut } from "react-icons/fa";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 
 type LayoutProps = {
   children: ReactNode;
 };
 
-const showCommandPalette = () => {
-  console.log("commandPallette");
-};
 
 const Layout: React.FC<LayoutProps> = ({ children }) => (
-  <div className="mt-8 p-2 sm:p-4 flex justify-center w-full">
+  <div className=" dur  mt-8 p-2 sm:p-4 flex justify-center w-full">
     <div className="mx-2 w-full sm:mx-12 lg:w-2/3  overflow-hidden  ">
       <div className="flex mb-4 flex-row justify-between">
         <div>
@@ -40,6 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => (
           </SignedIn>
         </div>
       </div>
+
 
       {children}
     </div>

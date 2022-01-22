@@ -10,50 +10,11 @@ import { getExpenseCategories } from "../../api/expense-categories/get-categorie
 
 import {  currencies } from "./../../utils";
 import { useUser } from "@clerk/nextjs";
-import UiLoading from "../../components/ui-loading/UiLoading";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
-import { ExpensesProps, ParsedExpensesProps } from "../../components/types";
-import SummaryBox from "./components/SummaryBox";
+import { ExpensesProps } from "../../components/types";
 import ExpensesNavigation from "./components/ExpensesNavigation";
+import { Transition } from "@headlessui/react";
 
-const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
-  const groupByDate = expenses.reduce(
-    (result: any, currentItem: AllExpensesProps) => {
-      (result[currentItem.date] = result[currentItem.date] || []).push(
-        currentItem
-      );
-      return result;
-    },
-    {}
-  );
-
-  const dailyExpenses = Object.entries(groupByDate).map((entry: any) => {
-    const [date, expenseValues] = entry;
-
-    const unified = expenseValues.map((value: AllExpensesProps) => ({
-      ...value,
-      amount:
-        factorObject && Object.keys(factorObject).includes(value.currency)
-          ? value.amount * factorObject[value.currency]
-          : value.amount,
-    }));
-    const total = unified.reduce(
-      (s: number, v: AllExpensesProps) => s + v.amount,
-      0
-    );
-
-    return { date: date + "T00:00:00.000Z", total };
-  });
-
-  const summedUpExpenses = dailyExpenses.map((day, index) => ({
-    ...day,
-    totalSum: dailyExpenses
-      .slice(0, index + 1)
-      .reduce((a, b) => a + b.total, 0),
-  }));
-
-  return { dailyExpenses, summedUpExpenses };
-};
 
 const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const user = useUser();
@@ -67,7 +28,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const [expenses, setExpenses] = useState(queriedExpenses);
 
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [stats, setStats] = useState({
     monthlyTotal: 0,
@@ -176,10 +137,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
 
-  return isLoading ? (
-    <UiLoading />
-  ) : (
-    <>
+  return (
+    <div>
       <ExpensesNavigation activeItem="daily" />
 
       <div className="flex flex-col md:flex-row mt-0 justify-between">
@@ -194,7 +153,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               <select
                 onChange={(e) => setSelectedCurrency(e.target.value)}
                 value={selectedCurrency}
-                className="styled-input mr-1"
+                className="styled-input"
               >
                 {currencies.map((currency) => (
                   <option key={currency.value} value={currency.value}>
@@ -207,7 +166,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
       </div>
 
 
-      <div className=" ">
+      <div className=" animate ">
         <ExpenseListing
           currency={selectedCurrency}
           currencyFactors={currencyFactors}
@@ -219,10 +178,19 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           deleteAction={deleteExpenseAndReload}
           dailyAverage={stats.dailyAverage}
           prognosedTotal={stats.prognosedTotal}
+          isLoading={isLoading}
         />
       </div>
 
-      {modalIsOpen && (
+      <Transition
+        show={modalIsOpen}
+        enter="transition-opacity duration-200 ease-in"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-200 ease-in"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
         <AddExpenseModal
           categories={queriedCategories}
           reload={reloadExpenses}
@@ -230,8 +198,9 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           setOpen={setIsOpen}
           user={user.id}
         />
-      )}
-    </>
+        </Transition>
+      
+    </div>
   );
 };
 
