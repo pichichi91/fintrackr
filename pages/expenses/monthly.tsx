@@ -1,18 +1,21 @@
 import dayjs from "dayjs";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
-import { AllExpensesProps, getExpenses } from "../../api/expenses/get-expenses";
+import {
+  AllExpensesProps,
+  getAllExpenses,
+  getExpenses,
+} from "../../api/expenses/get-expenses";
 import ExpensesArea from "../../components/graphs/ExpensesArea";
-import AddExpenseModal from "../../components/expenses/addModal";
 import { Converter } from "easy-currencies";
 
 import { deleteExpense } from "../../api/expenses/delete-expense";
 import { getExpenseCategories } from "../../api/expense-categories/get-categories";
 
-import {  currencies } from "../../utils";
+import { currencies } from "../../utils";
 import { useUser } from "@clerk/nextjs";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
-import {  ParsedExpensesProps } from "../../components/types";
+import { ParsedExpensesProps } from "../../components/types";
 import CategoryListing from "../../components/expenses/CategoryListing";
 import ExpensesNavigation from "./components/ExpensesNavigation";
 import _ from "lodash";
@@ -28,23 +31,23 @@ const groupByCategory = (expenses: AllExpensesProps[], factorObject: any) => {
     {}
   );
 
-
   type Category = {
     value: number;
-    key: string
-  }
+    key: string;
+  };
 
-  return Object.entries(groupBy).map(([key, items]) => {
-    const expenseItems: any = items;
-    const value = expenseItems.reduce(
-      (s: number, v: AllExpensesProps) =>
-        s + v.amount * (factorObject ?  factorObject[v.currency] : 1),
-      0
-    );
+  return Object.entries(groupBy)
+    .map(([key, items]) => {
+      const expenseItems: any = items;
+      const value = expenseItems.reduce(
+        (s: number, v: AllExpensesProps) =>
+          s + v.amount * (factorObject ? factorObject[v.currency] : 1),
+        0
+      );
 
-    return { key: key === "undefined" ? "" : key, value };
-  }).sort(( a: Category, b: Category ) => b.value - a.value);
-
+      return { key: key === "undefined" ? "" : key, value };
+    })
+    .sort((a: Category, b: Category) => b.value - a.value);
 };
 
 const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
@@ -92,8 +95,10 @@ const Expenses: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(1);
   const [selectedCurrency, setSelectedCurrency] = useState("MXN");
   const [currencyFactors, setCurrencyFactors] = useState();
-  const [years, setYears] = useState<string[]>([dayjs().format('YYYY')])
-  const [months, setMonths] = useState<{id: string, name: string}[]>([{id: dayjs().format('M'), name:dayjs().format('MM')}])
+  const [years, setYears] = useState<string[]>([dayjs().format("YYYY")]);
+  const [months, setMonths] = useState<{ id: string; name: string }[]>([
+    { id: dayjs().format("M"), name: dayjs().format("MM") },
+  ]);
 
   const [expenses, setExpenses] = useState(queriedExpenses);
   const [parsedExpenses, setParsedExpenses] = useState<ParsedExpensesProps>({
@@ -213,45 +218,58 @@ const Expenses: React.FC = () => {
       });
     });
 
-    const expenseYears = new Set(expenses.map(expense => dayjs(expense.date).format('YYYY')));
+    const expenseYears = new Set(
+      expenses.map((expense) => dayjs(expense.date).format("YYYY"))
+    );
 
-    const expenseMonths : {id: string, name: string}[] = []
-    expenses.map(expense => {
-      
-      const date = dayjs(expense.date)
+    getMonths();
 
-      const found = months.find(month => month.name === date.format('MMMM'))
-      console.log({found })
-      if (!expenseMonths.find(month => month.name === date.format('MMMM'))) {
-        expenseMonths.push({ id: date.format('M'), name: date.format('MMMM')}) 
-      }
-    
-    
-    })
-
-    setMonths(Array.from(expenseMonths));
     setYears(Array.from(expenseYears));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses, selectedCurrency]);
 
+  const getMonths = async () => {
+    const { data } = await getAllExpenses({ userId: user.id });
+
+    const expenseMonths: { id: string; name: string }[] = [];
+
+    data?.map((expense) => {
+      const date = dayjs(expense.date);
+
+      const found = months.find((month) => month.name === date.format("MMMM"));
+      if (!expenseMonths.find((month) => month.name === date.format("MMMM"))) {
+        expenseMonths.push({ id: date.format("M"), name: date.format("MMMM") });
+      }
+    });
+
+    setMonths(Array.from(expenseMonths));
+  };
 
   return (
-        <Transition
-    show={!isLoading}
-    enter="transition-opacity duration-200 ease-in"
-    enterFrom="opacity-0"
-    enterTo="opacity-100"
-    leave="transition-opacity duration-200 ease-in"
-    leaveFrom="opacity-100"
-    leaveTo="opacity-0"
-  >
-<ExpensesNavigation activeItem="monthly" />
+    <Transition
+      show={!isLoading}
+      enter="transition-opacity duration-400 ease-in"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-400 ease-in"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <ExpensesNavigation activeItem="monthly" />
 
-      <div className={`flex ${years.length >= 1 ? 'flex-row' : 'flex-col' } md:flex-row mt-4 justify-between`}>
+      <div
+        className={`flex ${
+          years.length >= 1 ? "flex-row" : "flex-col"
+        } md:flex-row mt-4 justify-between`}
+      >
         <h2 className="flex-1 font-bold text-2xl ">Monthly</h2>
 
         <div className="flex flex-row md:justify-start justify-center sm:justify-between">
-          <div className={`md:flex ${years.length === 1 ? 'hidden md:flex' : 'flex'}  `}>
+          <div
+            className={`md:flex ${
+              years.length === 1 ? "hidden md:flex" : "flex"
+            }  `}
+          >
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
@@ -264,9 +282,7 @@ const Expenses: React.FC = () => {
                 className="styled-input mr-1"
                 disabled={years.length === 1}
               >
-                {years.length !== 1 &&
-                <option value={0}>Select a year</option>
-              }
+                {years.length !== 1 && <option value={0}>Select a year</option>}
                 {years.map((year) => (
                   <option key={year} value={year}>
                     {year}
@@ -288,9 +304,9 @@ const Expenses: React.FC = () => {
                 className="styled-input mr-1"
                 disabled={months.length === 1}
               >
-                {months.length !== 1 &&
-                <option value={0}>Select a month</option>
-              }
+                {months.length !== 1 && (
+                  <option value={0}>Select a month</option>
+                )}
                 {months.map((month) => (
                   <option key={month.id} value={month.id}>
                     {month.name}
@@ -324,8 +340,9 @@ const Expenses: React.FC = () => {
 
       <div className="my-4 mt-4 ">
         <CategoryListing
-        isLoading={isLoading}
-          currency={selectedCurrency} prognosed={stats.prognosedTotal}
+          isLoading={isLoading}
+          currency={selectedCurrency}
+          prognosed={stats.prognosedTotal}
           categories={groupByCategory(expenses, currencyFactors)}
         />
       </div>
@@ -344,8 +361,6 @@ const Expenses: React.FC = () => {
         </div>
       )}
 
-
-
       <div className="my-4 mt-12 ">
         <h2 className="font-bold text-2xl mb-8">This month expenses</h2>
         <ExpenseListing
@@ -355,8 +370,7 @@ const Expenses: React.FC = () => {
           deleteAction={deleteExpenseAndReload}
         />
       </div>
-      
-      </Transition>
+    </Transition>
   );
 };
 

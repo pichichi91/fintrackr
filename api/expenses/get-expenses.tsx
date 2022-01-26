@@ -33,4 +33,15 @@ const getExpenses = async (filters: AllExpensesParams) => {
   return { data, error };
 };
 
-export { getExpenses };
+const getAllExpenses = async (filters: AllExpensesParams) => {
+
+  
+  const { data, error } = await supabaseClient
+    .from("trackr_expenses")
+    .select("id, amount, currency, category(name), date, notes")
+    .order("date")
+    .eq('user_id', filters.userId)
+  return { data, error };
+};
+
+export { getExpenses, getAllExpenses };

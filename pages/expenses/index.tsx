@@ -140,10 +140,10 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   return (
     <Transition
     show={!isLoading}
-    enter="transition-opacity duration-200 ease-in"
+    enter="transition-opacity duration-400 ease-in"
     enterFrom="opacity-0"
     enterTo="opacity-100"
-    leave="transition-opacity duration-200 ease-in"
+    leave="transition-opacity duration-400 ease-in"
     leaveFrom="opacity-100"
     leaveTo="opacity-0"
   >
