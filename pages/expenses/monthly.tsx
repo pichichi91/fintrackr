@@ -114,6 +114,7 @@ const Expenses: React.FC = () => {
     monthlyTotal: 0,
     dailyAverage: 0,
     prognosedTotal: 0,
+    livingCosts: 0,
   });
 
   const reloadExpenses = async () => {
@@ -121,16 +122,16 @@ const Expenses: React.FC = () => {
 
     const startDate = dayjs()
       .set("year", Number(selectedYear))
-      .set("month", selectedMonth -1)
+      .set("month", selectedMonth - 1)
       .startOf("month")
       .format("YYYY-MM-DD");
     const endDate = dayjs()
       .set("year", Number(selectedYear))
-      .set("month", selectedMonth -1)
+      .set("month", selectedMonth - 1)
       .endOf("month")
       .format("YYYY-MM-DD");
 
-      console.log(startDate, endDate)
+    console.log(startDate, endDate);
 
     const { id: userId } = user;
 
@@ -189,8 +190,14 @@ const Expenses: React.FC = () => {
           .toFixed(0)
       );
 
+      const livingCosts = expenses.filter(
+        (expense) => !["Health", 'Subscriptions'].includes(expense.category?.name)
+      )
+      const livingCostsTotal = Number(livingCosts.reduce((s, v) => s + v.amount * factorObject[v.currency], 0).toFixed(0));
+
+
       if (monthlyTotal == 0) {
-        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0 });
+        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0, livingCosts: 0 });
         return;
       }
 
@@ -203,7 +210,7 @@ const Expenses: React.FC = () => {
       });
 
       if (expensesUntilToday?.length === 0) {
-        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0 });
+        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0, livingCosts: 0 });
         return;
       }
 
@@ -222,6 +229,7 @@ const Expenses: React.FC = () => {
         monthlyTotal,
         dailyAverage,
         prognosedTotal: daysOfMonth * dailyAverage,
+        livingCosts: livingCostsTotal
       });
     });
 
@@ -253,9 +261,9 @@ const Expenses: React.FC = () => {
   };
 
   const selectedEndDate = dayjs()
-  .set("year", Number(selectedYear))
-  .set("month", selectedMonth -1)
-  .endOf("month");
+    .set("year", Number(selectedYear))
+    .set("month", selectedMonth - 1)
+    .endOf("month");
 
   return (
     <Transition
@@ -357,6 +365,7 @@ const Expenses: React.FC = () => {
           prognosed={stats.prognosedTotal}
           categories={groupByCategory(expenses, currencyFactors)}
           endDate={selectedEndDate}
+          livingCosts={stats.livingCosts}
         />
       </div>
 
