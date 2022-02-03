@@ -93,6 +93,8 @@ const Expenses: React.FC = () => {
   const user = useUser();
   const queriedExpenses: AllExpensesProps[] = [];
   const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedYear, setSelectedYear] = useState(dayjs().format("YYYY"));
+
   const [selectedCurrency, setSelectedCurrency] = useState("MXN");
   const [currencyFactors, setCurrencyFactors] = useState();
   const [years, setYears] = useState<string[]>([dayjs().format("YYYY")]);
@@ -116,14 +118,19 @@ const Expenses: React.FC = () => {
 
   const reloadExpenses = async () => {
     setIsLoading(true);
+
     const startDate = dayjs()
-      .add(selectedMonth - 1, "month")
+      .set("year", Number(selectedYear))
+      .set("month", selectedMonth -1)
       .startOf("month")
       .format("YYYY-MM-DD");
     const endDate = dayjs()
-      .add(selectedMonth - 1, "month")
+      .set("year", Number(selectedYear))
+      .set("month", selectedMonth -1)
       .endOf("month")
       .format("YYYY-MM-DD");
+
+      console.log(startDate, endDate)
 
     const { id: userId } = user;
 
@@ -277,8 +284,8 @@ const Expenses: React.FC = () => {
                 </span>
               </div>
               <select
-                onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                value={selectedMonth}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                value={selectedYear}
                 className="styled-input mr-1"
                 disabled={years.length === 1}
               >
