@@ -252,6 +252,11 @@ const Expenses: React.FC = () => {
     setMonths(Array.from(expenseMonths));
   };
 
+  const selectedEndDate = dayjs()
+  .set("year", Number(selectedYear))
+  .set("month", selectedMonth -1)
+  .endOf("month");
+
   return (
     <Transition
       show={!isLoading}
@@ -351,6 +356,7 @@ const Expenses: React.FC = () => {
           currency={selectedCurrency}
           prognosed={stats.prognosedTotal}
           categories={groupByCategory(expenses, currencyFactors)}
+          endDate={selectedEndDate}
         />
       </div>
 

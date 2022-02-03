@@ -1,6 +1,6 @@
 import UiBadge from "../ui-badge/ui-badge";
-import { ImCross } from "react-icons/im";
 import { Transition } from "@headlessui/react";
+import dayjs, { Dayjs } from "dayjs";
 
 type CategoryProps = {
   value: number;
@@ -13,13 +13,15 @@ type ExpenseListingProps = {
   addAction?: () => void;
   prognosed: number;
   isLoading: boolean;
+  endDate: Dayjs;
 };
 
 const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
   categories,
   currency,
   prognosed,
-  isLoading
+  isLoading,
+  endDate,
 }) => {
   const total = categories?.reduce((i, c) => i + c.value, 0).toFixed(0);
 
@@ -47,7 +49,7 @@ const ExpenseListingTable: React.FC<ExpenseListingProps> = ({
         <div className="mt-4 w-full px-6 py-4  bg-gradient-to-r from-indigo-100 to-indigo-200 rounded flex-grow-0">
           <h3>Prognosed</h3>
           <div className="flex">
-            <div className="mr-1 text-3xl">{prognosed}</div>
+            <div className="mr-1 text-3xl">{ dayjs().isAfter(endDate) ? total : prognosed}</div>
             <div className=" mt-1 font-bold text-sm text-indigo-600 ">
               {currency}
             </div>
