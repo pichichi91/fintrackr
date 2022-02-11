@@ -245,6 +245,8 @@ const Expenses: React.FC = () => {
           .format("D")
       );
 
+      console.log({daysOfMonth, dailyAverage, totalUntilNow})
+
       setStats({
         monthlyTotal,
         dailyAverage,
