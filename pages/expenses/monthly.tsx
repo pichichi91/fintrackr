@@ -92,8 +92,9 @@ const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
 const Expenses: React.FC = () => {
   const user = useUser();
   const queriedExpenses: AllExpensesProps[] = [];
-  const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState(Number(dayjs().format("MM")));
   const [selectedYear, setSelectedYear] = useState(dayjs().format("YYYY"));
+  
 
   const [selectedCurrency, setSelectedCurrency] = useState("MXN");
   const [currencyFactors, setCurrencyFactors] = useState();
