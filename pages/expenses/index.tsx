@@ -8,13 +8,12 @@ import { Converter } from "easy-currencies";
 import { deleteExpense } from "../../api/expenses/delete-expense";
 import { getExpenseCategories } from "../../api/expense-categories/get-categories";
 
-import {  currencies } from "./../../utils";
+import { currencies } from "./../../utils";
 import { useUser } from "@clerk/nextjs";
 import ExpenseListing from "../../components/expenses/ExpenseListing";
 import { ExpensesProps } from "../../components/types";
 import ExpensesNavigation from "./components/ExpensesNavigation";
 import { Transition } from "@headlessui/react";
-
 
 const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const user = useUser();
@@ -26,7 +25,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const [currencyFactors, setCurrencyFactors] = useState();
 
   const [expenses, setExpenses] = useState(queriedExpenses);
-
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,8 +89,6 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
       setCurrencyFactors(factorObject);
 
-
-
       const monthlyTotal = Number(
         expenses
           ?.reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
@@ -126,7 +122,12 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
         (totalUntilNow / Number(dayjs().format("D"))).toFixed(0)
       );
 
-      const daysOfMonth = Number(dayjs().endOf("month").format("D"));
+      const daysOfMonth = Number(
+        dayjs()
+          .set("month", selectedMonth - 1)
+          .endOf("month")
+          .format("D")
+      );
 
       setStats({
         monthlyTotal,
@@ -139,19 +140,19 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
 
   return (
     <Transition
-    show={!isLoading}
-    enter="transition-opacity duration-400 ease-in"
-    enterFrom="opacity-0"
-    enterTo="opacity-100"
-    leave="transition-opacity duration-400 ease-in"
-    leaveFrom="opacity-100"
-    leaveTo="opacity-0"
-  >
-    <div>
-      <ExpensesNavigation activeItem="daily" />
+      show={!isLoading}
+      enter="transition-opacity duration-400 ease-in"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-400 ease-in"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <div>
+        <ExpensesNavigation activeItem="daily" />
 
-      <div className="flex flex-row mt-0 justify-between">
-        <h2 className="flex-1 font-bold text-2xl ">Today</h2>
+        <div className="flex flex-row mt-0 justify-between">
+          <h2 className="flex-1 font-bold text-2xl ">Today</h2>
           <div className="flex mt-2 md:mb-8 md:mt-0 ml-0 md:ml-1">
             <label className="flex flex-col ">
               <div className="flex flex-row items-center ">
@@ -172,24 +173,22 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
               </select>
             </label>
           </div>
-      </div>
+        </div>
 
-
-      <div className=" animate ">
-        <ExpenseListing
-          currency={selectedCurrency}
-          currencyFactors={currencyFactors}
-          expenses={expenses?.filter((expense) =>
-            dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
-          )}
-          type="DAY"
-          addAction={() => setIsOpen(true)}
-          deleteAction={deleteExpenseAndReload}
-          dailyAverage={stats.dailyAverage}
-          prognosedTotal={stats.prognosedTotal}
-        />
-      </div>
-
+        <div className=" animate ">
+          <ExpenseListing
+            currency={selectedCurrency}
+            currencyFactors={currencyFactors}
+            expenses={expenses?.filter((expense) =>
+              dayjs(expense.date).startOf("day").isSame(dayjs().startOf("day"))
+            )}
+            type="DAY"
+            addAction={() => setIsOpen(true)}
+            deleteAction={deleteExpenseAndReload}
+            dailyAverage={stats.dailyAverage}
+            prognosedTotal={stats.prognosedTotal}
+          />
+        </div>
 
         <AddExpenseModal
           categories={queriedCategories}
@@ -198,10 +197,8 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
           setOpen={setIsOpen}
           user={user.id}
         />
-      
-    </div>
+      </div>
     </Transition>
-
   );
 };
 

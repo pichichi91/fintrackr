@@ -92,9 +92,10 @@ const parseExpenses = (expenses: AllExpensesProps[], factorObject: any) => {
 const Expenses: React.FC = () => {
   const user = useUser();
   const queriedExpenses: AllExpensesProps[] = [];
-  const [selectedMonth, setSelectedMonth] = useState(Number(dayjs().format("MM")));
+  const [selectedMonth, setSelectedMonth] = useState(
+    Number(dayjs().format("MM"))
+  );
   const [selectedYear, setSelectedYear] = useState(dayjs().format("YYYY"));
-  
 
   const [selectedCurrency, setSelectedCurrency] = useState("MXN");
   const [currencyFactors, setCurrencyFactors] = useState();
@@ -131,8 +132,6 @@ const Expenses: React.FC = () => {
       .set("month", selectedMonth - 1)
       .endOf("month")
       .format("YYYY-MM-DD");
-
-    console.log(startDate, endDate);
 
     const { id: userId } = user;
 
@@ -192,13 +191,22 @@ const Expenses: React.FC = () => {
       );
 
       const livingCosts = expenses.filter(
-        (expense) => !["Health", 'Subscriptions'].includes(expense.category?.name)
-      )
-      const livingCostsTotal = Number(livingCosts.reduce((s, v) => s + v.amount * factorObject[v.currency], 0).toFixed(0));
-
+        (expense) =>
+          !["Health", "Subscriptions"].includes(expense.category?.name)
+      );
+      const livingCostsTotal = Number(
+        livingCosts
+          .reduce((s, v) => s + v.amount * factorObject[v.currency], 0)
+          .toFixed(0)
+      );
 
       if (monthlyTotal == 0) {
-        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0, livingCosts: 0 });
+        setStats({
+          monthlyTotal,
+          dailyAverage: 0,
+          prognosedTotal: 0,
+          livingCosts: 0,
+        });
         return;
       }
 
@@ -211,7 +219,12 @@ const Expenses: React.FC = () => {
       });
 
       if (expensesUntilToday?.length === 0) {
-        setStats({ monthlyTotal, dailyAverage: 0, prognosedTotal: 0, livingCosts: 0 });
+        setStats({
+          monthlyTotal,
+          dailyAverage: 0,
+          prognosedTotal: 0,
+          livingCosts: 0,
+        });
         return;
       }
 
@@ -224,13 +237,19 @@ const Expenses: React.FC = () => {
         (totalUntilNow / Number(dayjs().format("D"))).toFixed(0)
       );
 
-      const daysOfMonth = Number(dayjs().endOf("month").format("D"));
+      const daysOfMonth = Number(
+        dayjs()
+          .set("year", Number(selectedYear))
+          .set("month", selectedMonth - 1)
+          .endOf("month")
+          .format("D")
+      );
 
       setStats({
         monthlyTotal,
         dailyAverage,
         prognosedTotal: daysOfMonth * dailyAverage,
-        livingCosts: livingCostsTotal
+        livingCosts: livingCostsTotal,
       });
     });
 
@@ -252,7 +271,6 @@ const Expenses: React.FC = () => {
     data?.map((expense) => {
       const date = dayjs(expense.date);
 
-      const found = months.find((month) => month.name === date.format("MMMM"));
       if (!expenseMonths.find((month) => month.name === date.format("MMMM"))) {
         expenseMonths.push({ id: date.format("M"), name: date.format("MMMM") });
       }
