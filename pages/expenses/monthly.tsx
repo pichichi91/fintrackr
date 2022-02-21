@@ -192,7 +192,7 @@ const Expenses: React.FC = () => {
 
       const livingCosts = expenses.filter(
         (expense) =>
-          !["Health", "Subscriptions"].includes(expense.category?.name)
+          !["Health", "Subscriptions", 'Trips'].includes(expense.category?.name)
       );
       const livingCostsTotal = Number(
         livingCosts
