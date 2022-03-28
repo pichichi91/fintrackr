@@ -42,7 +42,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   const [newData, setNewData] = useState<ExpenseProps>({
     date: dayjs().utc(),
     amount: 100,
-    currency: "MXN",
+    currency: currencies[0].value,
     days: 1,
     category: 0,
     notes: "",

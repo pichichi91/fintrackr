@@ -21,7 +21,7 @@ const Expenses: React.FC<ExpensesProps> = ({ queriedCategories }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const [selectedMonth, setSelectedMonth] = useState(1);
-  const [selectedCurrency, setSelectedCurrency] = useState("MXN");
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].value);
   const [currencyFactors, setCurrencyFactors] = useState();
 
   const [expenses, setExpenses] = useState(queriedExpenses);
