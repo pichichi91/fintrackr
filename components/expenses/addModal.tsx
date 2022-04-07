@@ -49,7 +49,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     splitBy: "days",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
 
   const changeSplit = (e: ChangeEvent<HTMLSelectElement>) => {
     const splitBy = e.target.value as "days" | "months";
@@ -81,7 +80,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     const { date, amount, currency, days, category, notes } = newData;
 
     const splittedAmount = amount / days;
@@ -103,7 +101,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     if (!error) setOpen(false);
     reload();
-    setIsLoading(false);
   };
 
   const changeCategory = (e: ChangeEvent<HTMLSelectElement>) => {
