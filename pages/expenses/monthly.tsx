@@ -97,7 +97,7 @@ const Expenses: React.FC = () => {
   );
   const [selectedYear, setSelectedYear] = useState(dayjs().format("YYYY"));
 
-  const [selectedCurrency, setSelectedCurrency] = useState("MXN");
+  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0].value);
   const [currencyFactors, setCurrencyFactors] = useState();
   const [years, setYears] = useState<string[]>([dayjs().format("YYYY")]);
   const [months, setMonths] = useState<{ id: string; name: string }[]>([
