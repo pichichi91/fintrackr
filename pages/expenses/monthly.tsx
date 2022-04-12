@@ -299,15 +299,13 @@ const Expenses: React.FC = () => {
       <ExpensesNavigation activeItem="monthly" />
 
       <div
-        className={`flex ${
-          years.length >= 1 ? "flex-row" : "flex-col"
-        } md:flex-row mt-4 justify-between`}
+        className={`flex flex-col md:flex-row mt-4 justify-between`}
       >
         <h2 className="flex-1 font-bold text-2xl ">Monthly</h2>
 
-        <div className="flex flex-row md:justify-start justify-center sm:justify-between">
+        <div className="flex gap-2 md:gap-0 flex-row mt-2 md:mt-0 ml-1 justify-start  sm:justify-between">
           <div
-            className={`md:flex ${
+            className={`md:flex hidden ${
               years.length === 1 ? "hidden md:flex" : "flex"
             }  `}
           >
@@ -320,7 +318,7 @@ const Expenses: React.FC = () => {
               <select
                 onChange={(e) => setSelectedYear(e.target.value)}
                 value={selectedYear}
-                className="styled-input mr-1"
+                className="styled-input mr-1 text-xs md:text-base "
                 disabled={years.length === 1}
               >
                 {years.length !== 1 && <option value={0}>Select a year</option>}
@@ -332,8 +330,8 @@ const Expenses: React.FC = () => {
               </select>
             </label>
           </div>
-          <div className="flex  ">
-            <label className="flex flex-col ">
+          <div className="flex   ">
+            <label className="flex flex-col  ">
               <div className="flex flex-row items-center ">
                 <span className=" hidden sm:inline mr-8 sm:mr-1 text-sm  text-gray-400 ">
                   Month
@@ -342,7 +340,7 @@ const Expenses: React.FC = () => {
               <select
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
                 value={selectedMonth}
-                className="styled-input mr-1"
+                className="styled-input  mr-1 text-sm md:text-base"
                 disabled={months.length === 1}
               >
                 {months.length !== 1 && (
@@ -366,7 +364,7 @@ const Expenses: React.FC = () => {
               <select
                 onChange={(e) => setSelectedCurrency(e.target.value)}
                 value={selectedCurrency}
-                className="styled-input mr-1"
+                className="styled-input mr-1 text-sm md:text-base"
               >
                 {currencies.map((currency) => (
                   <option key={currency.value} value={currency.value}>
